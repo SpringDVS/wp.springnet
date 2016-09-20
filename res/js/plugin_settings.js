@@ -38,4 +38,33 @@ jQuery(document).ready(function($) {           //wrapper
     });
 });
 
-// 3858f62230ac3c915f300c664312c63f
+jQuery(document).ready(function($) {           //wrapper
+	
+	if(!$("#cert-generate-button").length) {
+		return;
+	}
+	
+    $("#cert-generate-button").click(function() {
+    	$('#error-banner').hide();
+    	
+    	if($("#input_cert_passphrase").val() != $("#input_cert_passcheck").val()) {
+    		$('#error-banner').text("Passphrases do not match");
+    		$('#error-banner').show();
+    		return;
+    	}
+
+    	var this2 = this;
+        $.post(sn_settings.ajax_url, {
+           _ajax_nonce: sn_settings.nonce,
+            action: "settings_generate_certificate",
+            passphrase: $("#input_cert_passphrase").val(),
+            email: $("#input_cert_email").val(),
+        }, function(data) {
+        //	response = $.parseJSON(data);
+        
+        });
+        
+        return false;
+    });
+});
+
