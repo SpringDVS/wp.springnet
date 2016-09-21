@@ -7,7 +7,8 @@ class PK_Service_Model {
 
 	public function __construct() {
 		$this->keyring = new Keyring_Model();
-		$this->service = 'https://pkserv.spring-dvs.org';
+		//$this->service = 'http://ppks.zni.lan';
+		$this->service = 'https://pkserv.spring-dvs.org/process';
 	}
 	
 	public function generate_keypair($name, $email, $passphrase) {
@@ -29,17 +30,33 @@ $armor
 		}
 		
 		$body .= "\n";
-		return perform_request($body);
+
+		return $this->perform_request($body);
+		
+		
+	}
+	
+	public function keyring() {
+		return $this->keyring;
 	}
 	
 	private function perform_request($body) {
-		$args = array(
-				'headers' => array( "Content-type:application/plaintext"),
-				'body' => $body,
-				);
+		
+		$ch = curl_init($this->service);
+		
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
+		curl_setopt($ch, CURLOPT_POST,           1 );
+		curl_setopt($ch, CURLOPT_USERAGENT,      "WpSpringNet/0.9" );
+		curl_setopt($ch, CURLOPT_POSTFIELDS,      $body);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+		curl_setopt($ch, CURLOPT_HTTPHEADER,     array(
+				'User-Agent: WebSpringDvs/0.9'));
+		$json = curl_exec($ch);
+		
+		if($json === false) {
+			return false;
+		}
 
-		$response = wp_remote_post($this->service, $args);
-		$json = wp_remote_retrieve_body($response);
 		return json_decode($json, true);
 	}
 }

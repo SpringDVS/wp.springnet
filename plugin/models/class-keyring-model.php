@@ -7,12 +7,12 @@ class Keyring_Model {
 	public function __construct() {
 		global $wpdb;
 		$this->db = $wpdb;
-		$this->table = $this->db->prefix . '_snkr_certificates';
+		$this->table = $this->db->prefix . 'snkr_certificates';
 	}
 	
 	public function get_node_public_key() {
-		return $this->db->get_var("SELECT armor FROM $table_name 
-									WHERE owned=1");
+		return $this->db->get_var("SELECT armor FROM $this->table 
+									WHERE owned=1 AND keyid != 'private'");
 	}
 
 	public function get_node_private_key() {
@@ -30,9 +30,9 @@ class Keyring_Model {
 	public function set_node_certificate($keyid, $email, $sigs, $armor) {
 		if(!is_admin()) return false;
 		
-		$table = $this->db->prefix . '_snkr_certificates';
 		$name = get_option('node_uri');
-		return $this->set_certificate($keyid, $name, $email, $sigs, $armor);
+		return $this->set_certificate($keyid, $name, $email, $sigs, 
+										$armor,'owned');
 	}
 	
 	public function set_node_private($armor) {
@@ -48,13 +48,13 @@ class Keyring_Model {
 			if(!is_admin()) return false;
 		}
 
-		$owned = $state == 'owned' ? 1 : 0;
+		$owned = $status == 'owned' ? 1 : 0;
 		$sigtext = implode(',', $sigs);
 		$prepared = $this->db->prepare(
 						"INSERT INTO $this->table
 						 (keyid, uidname, uidemail, sigs, armor, owned)
 						 VALUES
-						 (%s,%s,%s,%s,%s,%d)
+						 (%s,%s,%s,%s,%s,%s)
 						 ON DUPLICATE KEY
 						 UPDATE sigs=%s,armor=%s",
 						$keyid, $name, $email, $sigtext, $armor, $owned,

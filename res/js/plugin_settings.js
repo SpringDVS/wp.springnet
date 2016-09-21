@@ -60,8 +60,7 @@ jQuery(document).ready(function($) {           //wrapper
             passphrase: $("#input_cert_passphrase").val(),
             email: $("#input_cert_email").val(),
         }, function(data) {
-        //	response = $.parseJSON(data);
-        
+        	location.reload();
         });
         
         return false;
