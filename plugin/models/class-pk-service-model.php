@@ -46,11 +46,11 @@ $armor
 		
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
 		curl_setopt($ch, CURLOPT_POST,           1 );
-		curl_setopt($ch, CURLOPT_USERAGENT,      "WpSpringNet/0.9" );
+		curl_setopt($ch, CURLOPT_USERAGENT,      "WpSpringNet/0.1" );
 		curl_setopt($ch, CURLOPT_POSTFIELDS,      $body);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
 		curl_setopt($ch, CURLOPT_HTTPHEADER,     array(
-				'User-Agent: WebSpringDvs/0.9'));
+				'User-Agent: WpSpringNet/0.1'));
 		$json = curl_exec($ch);
 		
 		if($json === false) {

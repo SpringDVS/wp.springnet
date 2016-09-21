@@ -18,6 +18,7 @@
 </h2>
 <?php 
 	if(!$tab) {
+		include(__DIR__.'/../prologues/settings_node.php');
 		include(__DIR__.'/settings_node.php');
 	} else if('network' == $tab) {
 		include(__DIR__.'/settings_network.php');

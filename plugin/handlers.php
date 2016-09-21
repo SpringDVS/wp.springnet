@@ -35,3 +35,42 @@ function springnet_settings_generate_certificate_handler() {
 	echo '{"result":"ok"}';
 	wp_die();
 }
+
+
+add_action('wp_ajax_settings_node_register',
+		'springnet_settings_node_register');
+function springnet_settings_node_register() {
+
+	if( !is_admin() ) { echo "Error"; wp_die(); }
+
+	require SPRINGNET_DIR.'/plugin/models/class-node-model.php';
+	$node = new Node_Model();
+	if($node->register()) {
+		echo '{"result":"ok"}';
+	} else {
+		echo '{"result":"error"}';
+	}
+	wp_die();
+}
+
+add_action('wp_ajax_settings_node_state',
+		'springnet_settings_node_state');
+function springnet_settings_node_state() {
+
+	if( !is_admin() ) { echo "Error"; wp_die(); }
+
+	require SPRINGNET_DIR.'/plugin/models/class-node-model.php';
+	
+	$node = new Node_Model();
+	$state = filter_input(INPUT_POST, 'state');
+
+	if('enabled' == $state) {
+		$node->enable();
+	} else {
+		$node->disable();
+	}
+	
+	
+	
+	wp_die();
+}

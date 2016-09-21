@@ -67,3 +67,59 @@ jQuery(document).ready(function($) {           //wrapper
     });
 });
 
+
+jQuery(document).ready(function($) {           //wrapper
+	
+	if(!$("#node-register-button").length) {
+		return;
+	}
+	
+    $("#node-register-button").click(function() {
+    	$('#error-banner').hide();
+
+    	var this2 = this;
+        $.post(sn_settings.ajax_url, {
+           _ajax_nonce: sn_settings.nonce,
+            action: "settings_node_register",
+        	}, function(data) {
+        		location.reload();
+        	});
+        
+        return false;
+    });
+});
+
+jQuery(document).ready(function($) {           //wrapper
+	button = null;
+	state = 'enabled';
+	
+	if(!$("#node-state-enable").length) {
+		if(!$("#node-state-disable").length) {
+			return;
+		} else {
+			button = $("#node-state-disable");
+			
+			state = 'disabled';
+		}
+	} else {
+		button = $("#node-state-enable");
+		state = 'enabled';
+	}
+
+	
+    button.click(function() {
+    	$('#error-banner').hide();
+
+    	var this2 = this;
+
+        $.post(sn_settings.ajax_url, {
+           _ajax_nonce: sn_settings.nonce,
+            action: "settings_node_state",
+            state: state,
+        	}, function(data) {
+        		location.reload();
+        	});
+        
+        return false;
+    });
+});
