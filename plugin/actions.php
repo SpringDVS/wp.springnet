@@ -7,6 +7,7 @@ function springnet_service_hook() {
 	if(is_page('spring')) {
 		require __DIR__.'/controllers/service_controller.php';
 		$response = springnet_service_request();
+		
 		echo $response;
 	}
 }
@@ -23,6 +24,7 @@ function springnet_bulletin_post_type_register() {
 			'show_in_menu' => false,
 			'public' => true,
 			'has_archive' => true,
+			'taxonomies' => array('post_tag')
 		)	
 	);
 }
