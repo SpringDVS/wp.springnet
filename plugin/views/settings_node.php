@@ -4,13 +4,13 @@
 <?php if(!$has_public_cert):?>
 	<div class="notice notice-error" id="error-banner">
 		Node does not have a public certificate -- please use the 
-		<em>Certificate</em> tab to generate one.
+		<em><a href="?page=springnet_options&tab=certificate">Certificate</a></em> tab to generate one.
 	</div>
 <?php endif; ?>
 <?php if(!$has_uri || !$has_token):?>
 	<div class="notice notice-error" id="error-banner">
 		Node does not have a valid network setup -- please use the 
-		<em>Network</em> tab to configure.
+		<em><a href="?page=springnet_options&tab=network">Network</a></em> tab to configure.
 	</div>
 <?php endif; ?>
 <table class="form-table">

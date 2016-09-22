@@ -3,10 +3,10 @@
 register_activation_hook(SPRINGNET_MAIN, 'springnet_activation_install');
 
 function springnet_activation_install() {
-	
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	global $wpdb;
 	
-	$table_name = $wpdb->prefix . 'snkr_certificates';
+	$table_name = $wpdb->prefix . 'sn_certificates';
 	$charset_collate = $wpdb->get_charset_collate();
 	$sql = "CREATE TABLE $table_name (
 				certid 		MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
@@ -20,7 +20,17 @@ function springnet_activation_install() {
 				UNIQUE  KEY keyid (keyid)
 			) $charset_collate;";
 
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	
+	
+	
+	$table2_name = $wpdb->prefix . 'sn_options';
+	$sql .= "CREATE TABLE $table2_name (
+	optid		MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+	optname		VARCHAR(128) NOT NULL,
+	optvalue	LONGTEXT     NOT NULL,
+	PRIMARY KEY       (optid),
+	UNIQUE  KEY keyid (optname)
+	) $charset_collate;";
 
 	dbDelta( $sql );
 }

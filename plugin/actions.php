@@ -1,5 +1,7 @@
 <?php
 require SPRINGNET_DIR.'/plugin/handlers.php';
+define('SN_MENU_SLUG', 'springnet');
+define('SN_MODULE_ADMIN', '?page=springnet&module=');
 
 add_action( 'wp', 'springnet_service_hook' );
 
@@ -12,44 +14,27 @@ function springnet_service_hook() {
 	}
 }
 
-add_action( 'init', 'springnet_bulletin_post_type_register' );
-
-function springnet_bulletin_post_type_register() {
-	register_post_type( 'springnet_bulletin',
-		array(
-			'labels' => array(
-				'name' => __('Spring Network Bulletins'),
-				'singular_name' => __('Bulletin'),
-			),
-			'show_in_menu' => false,
-			'public' => true,
-			'has_archive' => true,
-			'taxonomies' => array('post_tag')
-		)	
-	);
-}
 
 
 add_action( 'admin_menu', 'springnet_menu');
 function springnet_menu() {
 
-	$slug = 'springnet_overview';
+	$slug = SN_MENU_SLUG;
 	add_menu_page( 'SpringNet Overview', 'SpringNet', 'edit_pages',
-					'springnet_overview', 'springnet_overview_display');
+					$slug, 'springnet_admin_module_controller');
 
-	add_submenu_page( $slug, 'Bulletins', 'Bulletins', 'edit_pages',
-					'edit.php?post_type=springnet_bulletin'
-	);
 
 	add_submenu_page( $slug, 'Keyring', 'Keyring', 'edit_pages',
 					'springdvs_keyring', 'springdvs_keyring_display');
 	
 	if( is_admin() ) {
 		add_options_page('SpringNet Options', 'SpringNet', 'manage_options',
-				'springnet', 'springnet_settings_display');
+				'springnet_options', 'springnet_settings_display');
 		
 		add_action( 'admin_init', 'springnet_register_settings' );
 	}
+	
+	do_action('springnet_menu');
 }
 
 function springnet_register_settings() {
@@ -71,10 +56,11 @@ function springnet_register_settings() {
 add_action( 'admin_enqueue_scripts', 'springnet_enqueue_scripts');
 
 function springnet_enqueue_scripts($hook) {
-	if('settings_page_springnet' == $hook) {
+	if('settings_page_springnet_options' == $hook) {
 		springnet_enqueue_script_plugin_settings();
 	}
 }
+
 
 function springnet_enqueue_script_plugin_settings() {
 	wp_enqueue_script( 'plugin_settings',
@@ -86,4 +72,20 @@ function springnet_enqueue_script_plugin_settings() {
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'nonce' => $nonce,
 		) );
+}
+
+
+// --- Hooks ---
+add_action( 'init', 'springnet_init' );
+function springnet_init() {
+	$dirs = array_filter(glob(SPRINGNET_DIR.'/modules/*'), 'is_dir');
+	
+	foreach($dirs as $dir) {
+		$path = $dir.'/loader.php';
+		if(!file_exists($path)) continue;
+		include $path;
+	}
+
+
+	do_action('springnet_init');
 }

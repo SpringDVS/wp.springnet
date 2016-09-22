@@ -7,7 +7,7 @@ class Keyring_Model {
 	public function __construct() {
 		global $wpdb;
 		$this->db = $wpdb;
-		$this->table = $this->db->prefix . 'snkr_certificates';
+		$this->table = $this->db->prefix . 'sn_certificates';
 	}
 	
 	public function get_node_public_key() {
@@ -22,7 +22,6 @@ class Keyring_Model {
 	}
 
 	public function get_node_certificate() {
-		$table_name = $this->db->prefix . '_snkr_certificates';
 		return $this->db->get_var("SELECT * FROM $this->table
 									WHERE owned=1");
 	}

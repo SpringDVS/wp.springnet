@@ -9,11 +9,11 @@
  <?php settings_errors(); ?>
  
  <h2 class="nav-tab-wrapper">
- 	<a href="?page=springnet" class="nav-tab
+ 	<a href="?page=springnet_options" class="nav-tab
  		<?php echo null == $tab ? 'nav-tab-active' : '' ?>">Node</a>
-    <a href="?page=springnet&tab=network" class="nav-tab
+    <a href="?page=springnet_options&tab=network" class="nav-tab
     	<?php echo 'network' == $tab ? 'nav-tab-active' : '' ?>">Network</a>
-    <a href="?page=springnet&tab=certificate" class="nav-tab
+    <a href="?page=springnet_options&tab=certificate" class="nav-tab
     	<?php echo 'certificate' == $tab ? 'nav-tab-active' : '' ?>">Certificate</a>
 </h2>
 <?php 

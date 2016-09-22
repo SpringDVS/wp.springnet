@@ -24,8 +24,9 @@ require __DIR__.'/autoload.php';
 
 require __DIR__.'/plugin/activation.php';
 
+require __DIR__.'/plugin/models.php';
+require __DIR__.'/plugin/controllers.php';
 require __DIR__.'/plugin/views.php';
 require __DIR__.'/plugin/actions.php';
-
 
 ?>

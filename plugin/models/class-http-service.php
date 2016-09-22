@@ -5,14 +5,12 @@ class HTTP_Service {
 	public static function post_request($host, $message) {
 
 		$ch = curl_init('http://'.$host.'/spring/');
-		
+		$len = strlen($message);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
 		curl_setopt($ch, CURLOPT_POST,           1 );
 		curl_setopt($ch, CURLOPT_USERAGENT,      "WpSpringNet/0.1" );
 		curl_setopt($ch, CURLOPT_POSTFIELDS,      $message);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-		curl_setopt($ch, CURLOPT_HTTPHEADER,     array(
-				'User-Agent: WpSpringNet/0.1'));
 		return curl_exec($ch);
 	}
 	
