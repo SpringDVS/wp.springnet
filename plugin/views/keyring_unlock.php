@@ -1,10 +1,12 @@
+<div class="wrap">
+<?php springnet_uri_tag(); ?>
 <h1>Unlock Private Key</h1>
 <?php if(!is_admin()):?>
 <div class="notice notice-error"><p>
 	User requires <strong>Administrator</strong> role to unlock the 
 	node's private key.<a href="<?php echo $redirect; ?>">
 		go back</a>.
-</p></div>
+</p></div></div>
 <?php return; endif; ?>
 <?php if($status == 'error'): ?>
 <div class="notice notice-error"><p>
@@ -35,3 +37,4 @@
 </table>
 <input type="submit" value="Unlock" class="button button-primary">
 </form>
+</div>

@@ -1,6 +1,6 @@
 
 <div class="wrap">
-
+<?php springnet_uri_tag(); ?>
 <h1>
 	Keyring
 	<a href="?page=springnet_keyring&action=import" class="page-title-action">
@@ -48,5 +48,6 @@
 	</tr>
 	</tbody>
 </table>
+<h2>ToDo: Add pagination controls</h2>
 
 </div>

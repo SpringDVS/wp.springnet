@@ -1,4 +1,5 @@
 <div class="wrap">
+<?php springnet_uri_tag(); ?>
 	<h1>Organisation Profile</h1>
 	<form method="post">
 	<table class="form-table">

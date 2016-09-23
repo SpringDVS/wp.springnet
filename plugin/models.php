@@ -18,3 +18,7 @@ function springnet_set_option($option, $value) {
 			ON DUPLICATE KEY UPDATE optvalue=%s", $option, $value, $value);
 	return $wpdb->query($prepared);
 }
+
+function springnet_uri_tag() {
+	echo '<div class="springnet-uri-tag">spring://' . get_option('node_uri') . '</div>';
+}

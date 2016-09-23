@@ -1,4 +1,5 @@
 <div class="wrap">
+<?php springnet_uri_tag(); ?>
 <h1>Import Certificate</h1>
 <?php if('success' == $status): ?>
 	<div class="notice notice-success">Certificate for <em><?php echo $uid_name; ?></em> imported successful.

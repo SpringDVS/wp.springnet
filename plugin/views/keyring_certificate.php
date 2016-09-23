@@ -1,5 +1,5 @@
 <div class="wrap">
-
+<?php springnet_uri_tag(); ?>
 
 <?php if('success' == $status):?>
 	<h1>Certificate</h1>

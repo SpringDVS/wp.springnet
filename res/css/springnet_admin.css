@@ -11,3 +11,9 @@ a.delete {
 	text-shadow: 0 -1px 1px #9F1313 !important;
 	box-shadow: 0 1px 0 #4F0000 !important;
 }
+
+div.springnet-uri-tag {
+	float: right;
+	font-size: 0.9em;
+	font-weight: bold;
+}
