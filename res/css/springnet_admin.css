@@ -1,0 +1,13 @@
+@CHARSET "UTF-8";
+span.springnet-key-id,
+textarea.springnet-key-display {
+	font-family: monospace;
+}
+
+a.delete {
+	background-color: #BF0000 !important;
+	
+	border-color: #AF0000 #8F0000 #6F0000 !important;
+	text-shadow: 0 -1px 1px #9F1313 !important;
+	box-shadow: 0 1px 0 #4F0000 !important;
+}

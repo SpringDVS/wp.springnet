@@ -60,6 +60,9 @@ function springnet_enqueue_scripts($hook) {
 	if('settings_page_springnet_options' == $hook) {
 		springnet_enqueue_script_plugin_settings();
 	}
+	
+	wp_enqueue_style( 'springnet_admin',
+			plugins_url('springnet/res/css/springnet_admin.css'));
 }
 
 
@@ -73,6 +76,8 @@ function springnet_enqueue_script_plugin_settings() {
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'nonce' => $nonce,
 		) );
+	
+
 }
 
 

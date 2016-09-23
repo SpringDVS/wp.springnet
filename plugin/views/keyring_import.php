@@ -1,7 +1,7 @@
 <div class="wrap">
 <h1>Import Certificate</h1>
 <?php if('success' == $status): ?>
-	<div class="notice notice-success">Certificate imported successful.
+	<div class="notice notice-success">Certificate for <em><?php echo $uid_name; ?></em> imported successful.
 	Go back to <a href="?page=springnet_keyring">Keyring</a></div>
 <?php elseif ('error' == $status): ?>
 	<div class="notice notice-error">There was an error importing certificate.
@@ -20,7 +20,7 @@
 			<textarea name="certificate" class="springnet-key-display" rows="12" cols="65"></textarea>
 		</td>
 		</tr>
-	</table>	
+	</table>
 	<input type="submit" value="Import" class="button button-primary">
 		
 		

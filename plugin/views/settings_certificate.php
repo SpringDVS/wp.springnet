@@ -45,7 +45,7 @@ if(!$has_public_cert): ?>
 <?php endif; ?>
 
 <h2>Public Key</h2>
-<textarea rows="12" cols="64"><?php echo $public_key; ?></textarea>
+<textarea rows="12" cols="65" class="springnet-key-display"><?php echo $public_key; ?></textarea>
 
 <h2>Private Key</h2>
-<textarea rows="12" cols="64"><?php echo $private_key; ?></textarea>
+<textarea rows="12" cols="65" class="springnet-key-display"><?php echo $private_key; ?></textarea>

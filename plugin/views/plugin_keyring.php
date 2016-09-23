@@ -31,7 +31,7 @@
 		</td>
 					
 		<td><?php echo $row->uidemail; ?></td>
-		<td><?php echo $row->keyid; ?></td>
+		<td><span class="springnet-key-id"><?php echo $row->keyid; ?></span></td>
 	</tr>
 	<?php endforeach; ?>
 	

@@ -21,6 +21,14 @@ function springnet_keyring_display($keyring) {
 	include __DIR__."/views/plugin_keyring.php";
 }
 
-function springnet_keyring_import_display($status) {
+function springnet_keyring_import_display($status, $uid_name) {
 	include __DIR__."/views/keyring_import.php";
+}
+
+function springnet_keyring_unlock_display($reason, $status,$redirect) {
+	include __DIR__."/views/keyring_unlock.php";
+}
+
+function springnet_keyring_cert_display($key, $status = 'none', $notice='') {
+	include __DIR__."/views/keyring_certificate.php";
 }
