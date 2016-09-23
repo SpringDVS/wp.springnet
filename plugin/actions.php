@@ -76,22 +76,24 @@ function springnet_enqueue_script_plugin_settings() {
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'nonce' => $nonce,
 		) );
-	
-
 }
 
 
-// --- Hooks ---
-add_action( 'init', 'springnet_init' );
-function springnet_init() {
+
+add_action( 'init', 'springnet_load_modules', 0 );
+function springnet_load_modules() {
 	$dirs = array_filter(glob(SPRINGNET_DIR.'/modules/*'), 'is_dir');
 	
 	foreach($dirs as $dir) {
 		$path = $dir.'/loader.php';
 		if(!file_exists($path)) continue;
 		include $path;
-	}
+	}	
+}
 
 
+// --- Hooks ---
+add_action( 'init', 'springnet_init');
+function springnet_init() {
 	do_action('springnet_init');
 }

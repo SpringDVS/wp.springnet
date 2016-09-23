@@ -79,6 +79,6 @@
 </div>
 
 <a href="?page=springnet_keyring&keyid=<?php echo $key->keyid; ?>&action=remove"
-	class="delete button-primary">
+	class="delete springnet-risky button-primary">
 				Remove Certificate
 </a>

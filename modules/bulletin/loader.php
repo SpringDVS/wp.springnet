@@ -22,3 +22,25 @@ function springnet_bulletin_menu() {
 			'edit.php?post_type=springnet_bulletin'
 			);
 }
+
+
+
+include __DIR__.'/widgets/latest.php';
+
+add_action('widgets_init', 'springnet_bulletin_register_widget');
+function springnet_bulletin_register_widget() {
+	register_widget('SpringNetBulletinsLatest');
+}
+
+add_action('wp_ajax_gateway_bulletin_request',
+		'springnet_bulletin_request_gateway_handler');
+
+function springnet_bulletin_request_gateway_handler() {
+	$uri = filter_input(INPUT_POST,'uri')
+				? "spring://".filter_input(INPUT_POST,'uri')
+				: wp_die();
+	
+	include SPRINGNET_DIR.'/plugin/models/class-gateway-handler.php';
+	echo 'URI: ' . $uri;
+	wp_die();
+}
