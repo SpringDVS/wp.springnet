@@ -36,6 +36,18 @@ $armor
 		
 	}
 	
+	public function sign($certificate, $key, $passphrase) {
+		$body = "SIGN
+$passphrase
+PUBLIC {
+$certificate
+}
+PRIVATE {
+$key
+}\n";
+		return $this->perform_request($body);
+	}
+	
 	public function keyring() {
 		return $this->keyring;
 	}

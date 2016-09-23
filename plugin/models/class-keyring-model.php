@@ -59,7 +59,7 @@ class Keyring_Model {
 						$keyid, $name, $email, $sigtext, $armor, $owned,
 						$sigtext, $armor);
 		
-		$this->db->get_results($prepared);
+		return $this->db->query($prepared);
 	}
 	
 	public function get_certificate($keyid) {
@@ -69,6 +69,16 @@ class Keyring_Model {
 
 		$prepared = $this->db->prepare("SELECT * FROM $this->table
 										WHERE keyid=%s", $keyid);
+		return $this->db->get_results($prepared);
+	}
+	
+	public function get_uid_list($page, $limit = 10) {
+		$page = $page < 1 ? 0 : $page - 1;
+		$limit = $limit < 1 ? 1 : $limit;
+		
+		$from = $page * $limit; 
+		$prepared = $this->db->prepare("SELECT keyid, uidname, uidemail FROM $this->table
+				WHERE keyid != 'private' ORDER BY uidname LIMIT %d,%d", $from,$limit);
 		return $this->db->get_results($prepared);
 	}
 	

@@ -24,8 +24,9 @@ function springnet_menu() {
 					$slug, 'springnet_admin_module_controller');
 
 
+	// Keyring is built in
 	add_submenu_page( $slug, 'Keyring', 'Keyring', 'edit_pages',
-					'springdvs_keyring', 'springdvs_keyring_display');
+					'springnet_keyring', 'springnet_keyring_controller');
 	
 	if( is_admin() ) {
 		add_options_page('SpringNet Options', 'SpringNet', 'manage_options',
