@@ -22,8 +22,8 @@ class Keyring_Model {
 	}
 
 	public function get_node_certificate() {
-		return $this->db->get_var("SELECT * FROM $this->table
-									WHERE owned=1");
+		return $this->db->get_results("SELECT * FROM $this->table
+									WHERE owned=1 AND keyid != 'private'");
 	}
 	
 	public function set_node_certificate($keyid, $email, $sigs, $armor) {
@@ -59,7 +59,7 @@ class Keyring_Model {
 						$keyid, $name, $email, $sigtext, $armor, $owned,
 						$sigtext, $armor);
 		
-		$this->db->query($prepared);
+		$this->db->get_results($prepared);
 	}
 	
 	public function get_certificate($keyid) {
@@ -69,7 +69,7 @@ class Keyring_Model {
 
 		$prepared = $this->db->prepare("SELECT * FROM $this->table
 										WHERE keyid=%s", $keyid);
-		return $this->db->query($prepared);
+		return $this->db->get_results($prepared);
 	}
 	
 	public function has_private_key() {
