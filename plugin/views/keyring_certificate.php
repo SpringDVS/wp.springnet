@@ -4,7 +4,7 @@
 <?php if('success' == $status):?>
 	<h1>Certificate</h1>
 	
-	<div class="notice notice-success"><?php echo $notice; ?></div>
+	<div class="notice notice-success"><p><?php echo $notice; ?></p></div>
 	</div>
 	<a href="?page=springnet_keyring">Back to keyring</a>
 <?php return; endif;?>
