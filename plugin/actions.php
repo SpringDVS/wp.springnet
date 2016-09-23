@@ -30,7 +30,7 @@ function springnet_menu() {
 	
 	if( is_admin() ) {
 		add_options_page('SpringNet Options', 'SpringNet', 'manage_options',
-				'springnet_options', 'springnet_settings_display');
+				'springnet_options', 'springnet_settings_controller');
 		
 		add_action( 'admin_init', 'springnet_register_settings' );
 	}

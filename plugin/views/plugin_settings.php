@@ -1,8 +1,6 @@
 <?php
 	defined( 'ABSPATH' ) or die( 'Error' );
 	
-	$tab = filter_input(INPUT_GET, 'tab');
-	
 ?>
 <div class="wrap">
 <h1>SpringDVS Settings</h1>
@@ -18,12 +16,10 @@
 </h2>
 <?php 
 	if(!$tab) {
-		include(__DIR__.'/../prologues/settings_node.php');
 		include(__DIR__.'/settings_node.php');
 	} else if('network' == $tab) {
 		include(__DIR__.'/settings_network.php');
 	} else if('certificate' == $tab) {
-		include(__DIR__.'/../prologues/settings_certificate.php');
 		include(__DIR__.'/settings_certificate.php');
 	}
 ?>

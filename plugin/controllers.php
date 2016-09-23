@@ -124,3 +124,57 @@ function springnet_keyring_controller() {
 	}
 
 }
+
+function springnet_settings_controller() {
+	$tab = filter_input(INPUT_GET, 'tab');
+	switch($tab) {
+		case 'certificate':
+			return springnet_settings_certificate_controller();
+		case 'network':
+			return springnet_settings_network_controller();
+		default:
+			return springnet_settings_node_controller();
+	}
+}
+
+function springnet_settings_node_controller() {
+	require SPRINGNET_DIR.'/plugin/models/class-node-model.php';
+	require_once SPRINGNET_DIR.'/plugin/models/class-keyring-model.php';
+	
+	$tab = '';
+	
+	$node = new Node_Model();
+	$keyring = new Keyring_Model();
+	
+	$has_public_cert = $keyring->has_certificate();
+	$has_uri = get_option('node_uri') != '' ? true : false;
+	$has_token = get_option('geonet_token') != '' ? true : false;
+	$is_registered = $node->is_registered();
+	$is_enabled = false;
+	
+	
+	if($is_registered) {
+		$is_enabled = $node->is_enabled();
+	}
+	include __DIR__."/views/plugin_settings.php";
+}
+
+function springnet_settings_certificate_controller() {
+	require_once SPRINGNET_DIR.'/plugin/models/class-keyring-model.php';
+	$tab = 'certificate';
+	$has_public_cert = true;
+	
+	$keyring = new Keyring_Model();
+	$private_key = $keyring->get_node_private_key();
+	$public_key = $keyring->get_node_public_key();
+	
+	if(null == $public_key) {
+		$has_public_cert = false;
+	}
+	include __DIR__."/views/plugin_settings.php";
+}
+
+function springnet_settings_network_controller() {
+	$tab = 'network';
+	include __DIR__."/views/plugin_settings.php";
+}
