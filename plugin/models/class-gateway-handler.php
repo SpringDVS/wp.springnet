@@ -66,7 +66,7 @@ class Gateway_Handler {
 	public static function outbound_first_response(\SpringDvs\Message $msg, array $nodes) {
 
 		foreach($nodes as $node) {
-			$response = Http_Service::send($node->host(), $msg);
+			$response = Http_Service::dvsp_request($node->host(), $msg);
 
 			if($response === false
 					|| $response->cmd() != \SpringDvs\CmdType::Response

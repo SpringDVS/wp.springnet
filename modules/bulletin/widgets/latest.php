@@ -48,14 +48,14 @@ class SpringNetBulletinsLatest extends WP_Widget {
 	function widget( $args, $instance ) {
 		extract( $args );
 		echo $before_widget;
-		$loader = "<img class='sdvs-loader' id='spring-bulletin-loader' src=".plugins_url('../../../res/load.gif', __FILE__).">";
+		$loader = "<img class='sdvs-loader' id='spring-bulletin-loader' src=".plugins_url('springnet/res/img/load.gif').">";
 		echo $before_title . 'Latest Bulletins on <em>' . $instance['network'] ."</em>$loader". $after_title;	
 		
 		$uri = $instance['network'];
 		$query = $instance['query'];
 		?>
 		<div class="spring-bulletin">
-			<div>Filter: <span id='sdvs-bulletin-list-filter'>none</span> <a href='javascript:void(0);' onclick='SdvsBulletinsLatestCli.rerequest("")' class='reset'>reset</a></div>
+			<div>Filter: <span id='sdvs-bulletin-list-filter'>none</span> <a href='javascript:void(0);' onclick='SNetBulletinsLatestCli.rerequest("")' class='reset'>reset</a></div>
 			<table class="wp-list-table widefat  striped main">
 				<tbody class="the-list" id="sdvs-bulletin-list-body">
 				</tbody>

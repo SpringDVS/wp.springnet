@@ -1,56 +1,36 @@
 
 var SNetBulletinsLatestCli = {
-    gateway: "",
     network: "",
     request: function(network, query) {
     	SNetBulletinsLatestCli.network = network;
     	query = query == '' ? '' : '?'+query;
     	
     	uri = network+"/bulletin/"+query;
-        //uri = uri.replace(/\./g, "%2E");
+
         var $j = jQuery.noConflict();
+        $j('#spring-bulletin-loader').show();
+
     	$j.post(sn_gateway_bulletin.ajax_url, {
             _ajax_nonce: sn_gateway_bulletin.nonce,
              action: "gateway_bulletin_request",
              uri: uri,
-    	}, function(data) {
-    		console.log(data);
+    	}, function(response) {
+    		data = $j.parseJSON(response);
     	    if(data.service == "error"){ console.log("Service Error"); return; }
     	    if(data.status != "ok"){ console.log("Service Error"); console.log(data.uri); return; }
     	    SNetBulletinsLatestCli.apply(data.content);
     	});
-    	
-    	return;
 
-        
-        
-        
-
-        console.log(uri);
-        var $j = jQuery.noConflict();
-        $j('#spring-bulletin-loader').show();
-        $j.ajax({
-            type: "GET",
-            url: "http://"+gateway+"/gateway/bulletin/?__req="+uri+query,
-            async: false,
-            jsonpCallback: "recvBulletins",
-            dataType: "jsonp",
-            success: function(json) {
-            },
-            error: function(e) {
-            }
-            }
-        );       
     },
     
     rerequest: function(query) {
         tag = query == "" ? "none" : query;
         var $j = jQuery.noConflict();
+        
         $j("#sdvs-bulletin-list-filter").text(tag);
         query = query == "" ? "" : "tags="+query;
         SNetBulletinsLatestCli.request(
             SNetBulletinsLatestCli.network,
-            SNetBulletinsLatestCli.gateway,
             query
         );
         
@@ -58,43 +38,39 @@ var SNetBulletinsLatestCli = {
     
     requestProfile: function(node) {
         uri = node+"/orgprofile/";
-        uri = uri.replace(/\./g, "%2E");
 
         var $j = jQuery.noConflict();
         $j('#spring-bulletin-loader').show();
-        $j.ajax({
-            type: "GET",
-            url: "http://"+SNetBulletinsLatestCli.gateway+"/gateway/orgprofile/?__req="+uri,
-            async: false,
-            jsonpCallback: "recvProfile",
-            dataType: "jsonp",
-            success: function(json) {
-            },
-            error: function(e) {
-            }
-            }
-        );         
 
+    	$j.post(sn_gateway_bulletin.ajax_url, {
+            _ajax_nonce: sn_gateway_bulletin.nonce,
+             action: "gateway_bulletin_request",
+             uri: uri,
+    	}, function(response) {
+    		data = $j.parseJSON(response);
+    	    if(data.service == "error"){ console.log("Service Error"); return; }
+    	    if(data.status != "ok"){ console.log("Service Error"); console.log(data.uri); return; }
+    	    SNetBulletinsLatestCli.applyProfile(data.content);
+    	});
     },
     
     requestContent: function(node, uid) {
         uri = node+"/bulletin/"+uid+"/";
-        uri = uri.replace(/\./g, "%2E");
 
         var $j = jQuery.noConflict();
         $j('#spring-bulletin-loader').show();
-        $j.ajax({
-            type: "GET",
-            url: "http://"+SNetBulletinsLatestCli.gateway+"/gateway/orgprofile/?__req="+uri,
-            async: false,
-            jsonpCallback: "recvContent",
-            dataType: "jsonp",
-            success: function(json) {
-            },
-            error: function(e) {
-            }
-            }
-        );             	
+        
+       	$j.post(sn_gateway_bulletin.ajax_url, {
+            _ajax_nonce: sn_gateway_bulletin.nonce,
+             action: "gateway_bulletin_request",
+             uri: uri,
+    	}, function(response) {
+    		data = $j.parseJSON(response);
+    		if(data.service == "error"){ console.log("Service Error"); return; }
+    		if(data.status != "ok"){ console.log("Service Error"); console.log(data.uri); return; }
+    		SNetBulletinsLatestCli.applyContent(data.content);
+    	});
+
     },
     
     apply: function(bulletins) {
@@ -201,20 +177,4 @@ var SNetBulletinsLatestCli = {
         element = $j("#content-"+uid);
         element.hide();
     },
-}
-
-recvBulletins = function (data) {
-
-}
-
-recvProfile = function (data) {
-    if(data.service == "error"){ console.log("Service Error"); return; }
-    if(data.status != "ok"){ console.log("Service Error"); console.log(data.uri); return; }
-    SNetBulletinsLatestCli.applyProfile(data.content);
-}
-
-recvContent = function (data) {
-	   if(data.service == "error"){ console.log("Service Error"); return; }
-	   if(data.status != "ok"){ console.log("Service Error"); console.log(data.uri); return; }
-	   SNetBulletinsLatestCli.applyContent(data.content);
 }
