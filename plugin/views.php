@@ -17,7 +17,7 @@ function springnet_overview_display() {
 	include __DIR__."/views/plugin_overview.php";
 }
 
-function springnet_keyring_display($keyring) {
+function springnet_keyring_display($keyring, $count, $paged, $total_pages, $limit) {
 	include __DIR__."/views/plugin_keyring.php";
 }
 

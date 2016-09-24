@@ -48,6 +48,45 @@
 	</tr>
 	</tbody>
 </table>
-<h2>ToDo: Add pagination controls</h2>
 
+<div class="tablenav bottom">
+	<div class="tablenav-pages">
+		<span class=displaying-num"><?php echo $count; ?> items</span>
+		<span class="pagination-links">
+			<?php if($paged > 1):?>
+				<a class="next-page" href="?page=springnet_keyring<?php echo $limit != 10 ? '&limit='.$limit : '';?>">
+					<span class="screen-reader-text">First page</span>
+					<span aria-hidden="true">&laquo;</span>
+				<a class="last-page" href="?page=springnet_keyring&paged=<?php echo $paged-1; echo $limit != 10 ? '&limit='.$limit : '';?>">
+					<span class="screen-reader-text">Previous page</span>
+					<span aria-hidden="true">&lsaquo;</span></a>
+				</a>
+			<?php else: ?>
+					<span class="tablenav-pages-navspan">&laquo;</span>
+					<span class="tablenav-pages-navspan">&lsaquo;</span></a>
+			<?php endif; ?>
+			<span class="screen-reader-text">Current Page</span>
+			<span class="paging-input">
+				<span class="tablenav-paging-text">
+					<?php echo $paged; ?> of
+					<span class="total-pages">
+						<?php echo $total_pages; ?>
+					</span>
+				</span>
+			</span>
+			<?php if($paged < $total_pages):?>
+				<a class="next-page" href="?page=springnet_keyring&paged=<?php echo $paged+1; echo $limit != 10 ? '&limit='.$limit : '';?>">
+					<span class="screen-reader-text">Next page</span>
+					<span aria-hidden="true">&rsaquo;</span></a>
+				<a class="last-page" href="?page=springnet_keyring&paged=<?php echo $total_pages; echo $limit != 10 ? '&limit='.$limit : '';?>">
+					<span class="screen-reader-text">Last page</span>
+					<span aria-hidden="true">&raquo;</span>
+				</a>
+			<?php else: ?>
+					<span class="tablenav-pages-navspan">&rsaquo;</span>
+					<span class="tablenav-pages-navspan">&raquo;</span>
+			<?php endif; ?>
+		</span> 
+	</div>
+</div>
 </div>

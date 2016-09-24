@@ -158,9 +158,18 @@ class Keyring_Model {
 	}
 
 	public function has_certificate() {
-		if(!$this->get_node_public_key()) {
+		if(!$this->db->get_var("SELECT certid FROM $this->table where keyid='private'")) {
 			return false;
 		}
 		return true;
+	}
+	
+	public function get_certificate_count() {
+		$count = $this->db->get_var("SELECT COUNT(*) FROM $this->table");
+		if($this->has_private_key()) {
+			$count--;
+		}
+		
+		return $count;
 	}
 }
