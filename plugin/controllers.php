@@ -113,14 +113,23 @@ function springnet_keyring_controller() {
 		
 	} else if( ($keyid = filter_input(INPUT_GET, 'keyid')) ) {
 		$key = $keyring->get_resolved_certificate($keyid);
-		
 		$key = isset($key[0]) ? $key = $key[0] : null;
-		
 		springnet_keyring_cert_display($key);
 	} else {
-		$page = filter_input(INPUT_GET, 'page');
-		$rows = $keyring->get_uid_list($page);
-		springnet_keyring_display($rows);
+		
+		$paged = filter_input(INPUT_GET, 'paged');
+		$paged = $paged ? $paged : 1;
+		
+		$limit = filter_input(INPUT_GET, 'limit');
+		$limit = $limit ? $limit : 10;
+		
+		$rows = $keyring->get_uid_list($paged, $limit);
+		$count = $keyring->get_certificate_count();
+		$total_pages =  ceil($count / $limit);
+		$total_pages = $total_pages < 1 ? 1 : $total_pages;
+		
+		
+		springnet_keyring_display($rows, $count, $paged, $total_pages, $limit);
 	}
 
 }
