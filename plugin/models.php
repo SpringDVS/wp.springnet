@@ -22,3 +22,7 @@ function springnet_set_option($option, $value) {
 function springnet_uri_tag() {
 	echo '<div class="springnet-uri-tag">spring://' . get_option('node_uri') . '</div>';
 }
+
+function springnet_version_tag() {
+	echo '<div><strong>Version '.SPRINGNET_VERSION.'</strong></div>';
+}

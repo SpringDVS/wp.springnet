@@ -19,10 +19,12 @@ defined( 'ABSPATH' ) or die( 'Error' );
 
 define('SPRINGNET_MAIN', __FILE__);
 define('SPRINGNET_DIR', __DIR__);
+define('SPRINGNET_VERSION', '0.1.0');
 
 require __DIR__.'/autoload.php';
 
 require __DIR__.'/plugin/activation.php';
+require __DIR__.'/plugin/update.php';
 
 require __DIR__.'/plugin/models.php';
 require __DIR__.'/plugin/controllers.php';

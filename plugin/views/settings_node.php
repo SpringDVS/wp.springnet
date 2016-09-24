@@ -3,14 +3,29 @@
 
 <?php if(!$has_public_cert):?>
 	<div class="notice notice-error" id="error-banner">
-		Node does not have a public certificate -- please use the 
-		<em><a href="?page=springnet_options&tab=certificate">Certificate</a></em> tab to generate one.
+		<p>Node does not have a public certificate -- please use the 
+		<em><a href="?page=springnet_options&tab=certificate">Certificate</a></em> tab to generate one.</p>
 	</div>
 <?php endif; ?>
 <?php if(!$has_uri || !$has_token):?>
 	<div class="notice notice-error" id="error-banner">
-		Node does not have a valid network setup -- please use the 
-		<em><a href="?page=springnet_options&tab=network">Network</a></em> tab to configure.
+		<p>Node does not have a valid network setup -- please use the 
+		<em><a href="?page=springnet_options&tab=network">Network</a></em> tab to configure.</p>
+	</div>
+<?php endif; ?>
+
+<?php 
+$geonet = esc_attr(get_option('geonet_name')) . '.uk';
+?>
+
+<?php if(!$is_registered):?>
+	<div class="notice notice-warning is-dismissible" id="error-banner">
+		<p>Node is not yet registered on <em><?php echo $geonet; ?></em> --
+		please press <strong>Register Node</strong> button to perform registration.</p>
+	</div>
+<?php elseif(!$is_enabled): ?>
+	<div class="notice notice-info is-dismissible" id="error-banner">
+		<p>Node is <strong>offline</strong>
 	</div>
 <?php endif; ?>
 <table class="form-table">
@@ -55,7 +70,7 @@
   <tr>
     <th>GeoNetwork</th>
     <td id="info-node-registered">
-    <?php echo esc_attr(get_option('geonet_name')); ?>.uk
+    <?php echo $geonet; ?>
     </td>
   </tr>
     

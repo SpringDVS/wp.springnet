@@ -8,7 +8,7 @@ $method = filter_input(INPUT_GET, 'method');
 
 if(!$has_public_cert): ?>
 	<div class="notice notice-error" id="error-banner">
-		Node does not have a public certificate!
+		<p>Node does not have a public certificate! Please use form to generate certificate.</p>
 	</div>	
 	<?php if(!$method): ?>
 	
