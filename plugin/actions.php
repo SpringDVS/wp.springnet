@@ -21,7 +21,7 @@ function springnet_menu() {
 
 	$slug = SN_MENU_SLUG;
 	add_menu_page( 'SpringNet Overview', 'SpringNet', 'edit_pages',
-					$slug, 'springnet_admin_module_controller');
+					$slug, 'springnet_overview_controller');
 
 
 	// Keyring is built in

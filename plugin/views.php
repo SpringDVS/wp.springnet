@@ -13,7 +13,7 @@ function springnet_settings_display() {
 	include __DIR__."/views/plugin_settings.php";
 }
 
-function springnet_overview_display() {
+function springnet_overview_display($posts) {
 	include __DIR__."/views/plugin_overview.php";
 }
 

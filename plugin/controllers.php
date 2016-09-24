@@ -187,3 +187,11 @@ function springnet_settings_network_controller() {
 	$tab = 'network';
 	include __DIR__."/views/plugin_settings.php";
 }
+
+function springnet_overview_controller() {
+	$response = wp_remote_get("http://spring-dvs.org/wp-json/wp/v2/posts?per_page=5&filter[category_name]=Network");
+	$posts = json_decode(wp_remote_retrieve_body($response));
+	$posts = !$posts ? array() : $posts;
+	return springnet_overview_display($posts);
+}
+
