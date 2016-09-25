@@ -17,3 +17,22 @@ div.springnet-uri-tag {
 	font-size: 0.9em;
 	font-weight: bold;
 }
+
+ul.springnet-notification-list {
+	margin-top: 0px;
+}
+
+ul.springnet-notification-list a {
+	text-decoration: none;
+	font-weight: bold;
+}
+
+ul.springnet-notification-list span.source {
+	color: #8E9296;
+	font-size: 0.9em;
+}
+
+ul.springnet-notification-list div.description {
+	color: #8E9296;
+	margin-top: 0.5em;
+}

@@ -8,7 +8,7 @@ function springnet_activation_install() {
 	
 	$table_name = $wpdb->prefix . 'sn_certificates';
 	$charset_collate = $wpdb->get_charset_collate();
-	$sql = "CREATE TABLE $table_name (
+	$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 				certid 		MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
 				keyid		VARCHAR(32) NOT NULL,
 				uidname		VARCHAR(255) NOT NULL,
@@ -19,18 +19,29 @@ function springnet_activation_install() {
 				PRIMARY KEY       (certid),
 				UNIQUE  KEY keyid (keyid)
 			) $charset_collate;";
-
-	
-	
+	$wpdb->query($sql);
 	
 	$table2_name = $wpdb->prefix . 'sn_options';
-	$sql .= "CREATE TABLE $table2_name (
-	optid		MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
-	optname		VARCHAR(128) NOT NULL,
-	optvalue	LONGTEXT     NOT NULL,
-	PRIMARY KEY       (optid),
-	UNIQUE  KEY keyid (optname)
-	) $charset_collate;";
+	$sql2 = "CREATE TABLE IF NOT EXISTS $table2_name (
+			optid		MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+			optname		VARCHAR(128) NOT NULL,
+			optvalue	LONGTEXT     NOT NULL,
+			PRIMARY KEY       (optid),
+			UNIQUE  KEY keyid (optname)
+			) $charset_collate;";
+	$wpdb->query($sql2);
+	
+	
+	$table3_name = $wpdb->prefix . 'sn_notifications';
+	$sql3 = "CREATE TABLE IF NOT EXISTS $table3_name (
+			notif_id			MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+			notif_title			VARCHAR(128) NOT NULL,
+			notif_action			VARCHAR(320) NOT NULL,
+			notif_source			VARCHAR(64)  NOT NULL,
+			notif_description		TEXT,
+			PRIMARY KEY (notif_id)
+			) $charset_collate;";
+	$wpdb->query($sql3);
 
-	dbDelta( $sql );
+	
 }

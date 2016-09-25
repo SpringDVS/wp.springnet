@@ -13,9 +13,25 @@
 					</h2>
 					
 					<div class="inside">
+					<?php if(!$notifications): ?>
 						<div class="activity-block">
 						No notifications
 						</div>
+					<?php else: ?>
+						<div class="activity-block">
+						<ul class="springnet-notification-list">
+						<?php foreach($notifications as $notif): ?>
+							<li>
+								<a href="<?php echo $notif->notif_action; ?>&_actionid=<?php echo $notif->notif_id; ?>">
+									<?php echo $notif->notif_title; ?>
+								</a>	<br>
+								<span class="source"><?php echo $notif->notif_source; ?></span>
+								<div class="description"><?php echo $notif->notif_description; ?></div>
+							</li>
+						<?php endforeach;?>
+						</div>
+						</ul>
+					<?php endif; ?>
 					</div>
 				</div>
 
@@ -27,7 +43,7 @@
 			<div style="margin: 5px;" class="meta-box-sortables ui-sortable">
 				<div class="postbox">
 					<h2 class="hndle ui-sortable-handle">
-						<span>spring:// Network News</span>
+						<span>Network News</span>
 					</h2>
 					
 					<div class="inside">
@@ -55,11 +71,24 @@
 							}
 						?>
 						</ul>
+						
 						</div>
 						</div>
 					</div>
 				</div>
 
+		
+				<div class="postbox">
+					<h2 class="hndle ui-sortable-handle">
+						<span>Details</span>
+					</h2>
+					
+					<div class="inside">
+						<div class="activity-block">
+						<strong>Version:</strong> <?php echo SPRINGNET_VERSION; ?>
+						</div>
+					</div>
+				</div>
 		
 			</div>
 		</div>	

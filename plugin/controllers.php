@@ -189,9 +189,12 @@ function springnet_settings_network_controller() {
 }
 
 function springnet_overview_controller() {
+	include SPRINGNET_DIR.'/plugin/models/class-notification-handler.php';
+	$notif = new Notification_Handler();
 	$response = wp_remote_get("http://spring-dvs.org/wp-json/wp/v2/posts?per_page=5&filter[category_name]=Network");
 	$posts = json_decode(wp_remote_retrieve_body($response));
 	$posts = !$posts ? array() : $posts;
-	return springnet_overview_display($posts);
+	$notifications = $notif->get_notifications(1);
+	return springnet_overview_display($posts, $notifications);
 }
 
