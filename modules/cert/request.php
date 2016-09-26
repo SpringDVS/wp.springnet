@@ -26,9 +26,34 @@ if(isset($res[1])) {
 			
 			$handler->activate_notification($notif);
 			return array('request' => 'ok');
+		} else {
+			require_once SPRINGNET_DIR.'/plugin/models/class-pk-service-model.php';
+			
+			$keyring = new Keyring_Model();
+			
+			$pulled = $keyring->perform_pull($query['source']);
+			if(!$pulled) {
+				return array('request' => 'error');
+			}
+			
+			$service = new PK_Service_Model();
+
+			
+			$node_certificate = $keyring->get_node_public_key();
+			$response = $service->import($pulled, $node_certificate);
+			
+			if(!$response) {
+				return array('request' => 'error');
+			} elseif($keyring->set_node_certificate(
+					$response['keyid'],
+					$response['email'],
+					$response['sigs'],
+					$response['armor'])) {
+				return array('request' => 'ok');
+			} else {
+				return array('request' => 'error');
+			}
 		}
-		
-		return array('request' => 'ok'); 
 	} elseif('pull' == $res[1]) {
 		if(!isset($res[2]) || $res[2] == 'private') {
 			return array('key' => 'error');
