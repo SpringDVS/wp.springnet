@@ -2,8 +2,6 @@
 define('SN_MENU_SLUG', 'springnet');
 define('SN_MODULE_ADMIN', '?page=springnet&module=');
 
-require SPRINGNET_DIR.'/plugin/admin/handlers.php';
-
 
 add_action( 'admin_menu', 'springnet_menu');
 function springnet_menu() {

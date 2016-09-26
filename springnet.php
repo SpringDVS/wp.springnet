@@ -36,6 +36,7 @@ if(is_admin() && (!defined( 'DOING_AJAX' ) || !DOING_AJAX) ) {
 	require __DIR__.'/plugin/admin/views.php';
 	require __DIR__.'/plugin/admin/actions.php';
 } else {
+	require __DIR__.'/plugin/admin/ajax-handlers.php';
 	require __DIR__.'/plugin/front/actions.php';
 }
 
