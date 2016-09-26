@@ -40,6 +40,8 @@ function springnet_register_settings() {
 	register_setting('springnet-network-options', 'geonet_token');
 	
 	register_setting('springnet-certificate-options', 'cert_accept_pull');
+	
+	register_setting('springnet-general-options', 'springnet_news_display');
 
 }
 

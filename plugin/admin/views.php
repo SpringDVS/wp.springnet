@@ -4,7 +4,7 @@ function springnet_settings_display() {
 	include __DIR__."/views/plugin-settings.php";
 }
 
-function springnet_overview_display($posts, $notifications) {
+function springnet_overview_display($posts, $notifications, $hidden) {
 	include __DIR__."/views/plugin-overview.php";
 }
 

@@ -41,6 +41,8 @@
 
 		<div style="width:50%;" class="postbox-container">
 			<div style="margin: 5px;" class="meta-box-sortables ui-sortable">
+			
+			<?php if(!$hidden): ?>
 				<div class="postbox">
 					<h2 class="hndle ui-sortable-handle">
 						<span>Network News</span>
@@ -76,6 +78,7 @@
 						</div>
 					</div>
 				</div>
+				<?php endif; ?>
 
 		
 				<div class="postbox">

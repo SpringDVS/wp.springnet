@@ -13,6 +13,8 @@
     	<?php echo 'network' == $tab ? 'nav-tab-active' : '' ?>">Network</a>
     <a href="?page=springnet_options&tab=certificate" class="nav-tab
     	<?php echo 'certificate' == $tab ? 'nav-tab-active' : '' ?>">Certificate</a>
+	<a href="?page=springnet_options&tab=general" class="nav-tab
+    	<?php echo 'general' == $tab ? 'nav-tab-active' : '' ?>">General</a>
 </h2>
 <?php 
 	if(!$tab) {
@@ -21,6 +23,8 @@
 		include(__DIR__.'/settings-network.php');
 	} else if('certificate' == $tab) {
 		include(__DIR__.'/settings-certificate.php');
+	} else if('general' == $tab) {
+		include(__DIR__.'/settings-general.php');
 	}
 ?>
 </div>

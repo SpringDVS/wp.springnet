@@ -203,6 +203,8 @@ function springnet_settings_controller() {
 			return springnet_settings_certificate_controller();
 		case 'network':
 			return springnet_settings_network_controller();
+		case 'general':
+			return springnet_settings_general_controller();
 		default:
 			return springnet_settings_node_controller();
 	}
@@ -250,13 +252,26 @@ function springnet_settings_network_controller() {
 	include __DIR__."/views/plugin-settings.php";
 }
 
+function springnet_settings_general_controller() {
+	$tab = 'general';
+	include __DIR__."/views/plugin-settings.php";
+}
+
 function springnet_overview_controller() {
 	include SPRINGNET_DIR.'/plugin/models/class-notification-handler.php';
+	
 	$notif = new Notification_Handler();
-	$response = wp_remote_get("http://spring-dvs.org/wp-json/wp/v2/posts?per_page=5&filter[category_name]=Network");
-	$posts = json_decode(wp_remote_retrieve_body($response));
-	$posts = !$posts ? array() : $posts;
+	$hidden = get_option('springnet_news_display') == 'hidden' ? true : false;
+
+	if(!$hidden) {
+		$response = wp_remote_get("http://spring-dvs.org/wp-json/wp/v2/posts?per_page=5&filter[category_name]=Network");
+		$posts = json_decode(wp_remote_retrieve_body($response));
+		$posts = !$posts ? array() : $posts;
+	} else {
+		$posts = array();	
+	}
+
 	$notifications = $notif->get_notifications(1);
-	return springnet_overview_display($posts, $notifications);
+	return springnet_overview_display($posts, $notifications, $hidden);
 }
 
