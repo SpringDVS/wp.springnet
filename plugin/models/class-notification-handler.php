@@ -13,8 +13,8 @@ class Notification_Handler {
 		
 		$prepared = $this->db->prepare("INSERT INTO $this->table
 				(notif_title,notif_action,notif_source,notif_description)
-				VALUES (%s,%s,%s,%s,%s)", $title, $action, $source, $description);
-		
+				VALUES (%s,%s,%s,%s)", $title, $action, $source, $description);
+
 		return $this->db->query($prepared);
 	}
 	
@@ -24,7 +24,10 @@ class Notification_Handler {
 		$limit = 10;
 		$from = ($paged-1) * $limit;
 		
-		$prepared = $this->db->prepare("SELECT * FROM $this->table LIMIT %d,%d",
+		$prepared = $this->db->prepare("SELECT * FROM $this->table
+				ORDER BY notif_id DESC
+				LIMIT %d,%d
+				",
 				$from, $limit);
 		return $this->db->get_results($prepared);
 	}
@@ -33,6 +36,12 @@ class Notification_Handler {
 		$prepared = $this->db->prepare("DELETE FROM $this->table 
 				WHERE notif_id = %d",
 				$id);
+		return $this->db->query($prepared);
+	}
+	public function resolve_notification_action($action) {
+		$prepared = $this->db->prepare("DELETE FROM $this->table
+				WHERE notif_action = %s",
+				$action);
 		return $this->db->query($prepared);
 	}
 	

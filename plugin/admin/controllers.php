@@ -165,7 +165,7 @@ function springnet_settings_node_controller() {
 	if($is_registered) {
 		$is_enabled = $node->is_enabled();
 	}
-	include __DIR__."/views/plugin_settings.php";
+	include __DIR__."/views/plugin-settings.php";
 }
 
 function springnet_settings_certificate_controller() {
@@ -180,12 +180,12 @@ function springnet_settings_certificate_controller() {
 	if(null == $public_key) {
 		$has_public_cert = false;
 	}
-	include __DIR__."/views/plugin_settings.php";
+	include __DIR__."/views/plugin-settings.php";
 }
 
 function springnet_settings_network_controller() {
 	$tab = 'network';
-	include __DIR__."/views/plugin_settings.php";
+	include __DIR__."/views/plugin-settings.php";
 }
 
 function springnet_overview_controller() {

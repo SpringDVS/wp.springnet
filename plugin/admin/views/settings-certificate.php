@@ -44,6 +44,27 @@ if(!$has_public_cert): ?>
 	<?php endif; ?>
 <?php endif; ?>
 
+<form method="post" action="options.php">
+<?php 
+settings_fields( 'springnet-certificate-options' );
+//do_settings_sections('springnet-network-options');
+$pull = get_option('cert_accept_pull');
+
+$pull = $pull ? $pull : 'accept';
+?>
+<table class="form-table">
+	<tr valign="top">
+		<th>Certificate Pull Requests</th>
+		<td>
+		<select type="checkbox" name="cert_accept_pull">
+			<option value="accept" <?php if('accept' == $pull){echo 'selected';}?>>Automatically Accept</option>
+			<option value="notification" <?php if('notification' == $pull){echo 'selected';}?>>Notify</option>
+		</select>
+	</tr>
+</table>
+<?php submit_button(); ?>
+<!-- <input type="submit" value="Save settings" class="button button-primary"> -->
+</form>
 <h2>Public Key</h2>
 <textarea rows="12" cols="65" class="springnet-key-display"><?php echo $public_key; ?></textarea>
 

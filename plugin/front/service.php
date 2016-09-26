@@ -59,6 +59,8 @@ function springnet_protocol_service($msg) {
 		return "122";
 	}
 	$info = springnet_network_service_info($service);
+	include SPRINGNET_DIR.'/plugin/models/class-notification-handler.php';
+	
 	$response = include $inc;
 	
 	if($info['encoding'] == 'json') {

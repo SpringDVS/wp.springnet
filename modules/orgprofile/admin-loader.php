@@ -20,5 +20,5 @@ function springnet_orgprofile_controller() {
 }
 
 function springnet_orgprofile_display() {
-	include __DIR__.'/view_admin.php';
+	include __DIR__.'/view-admin.php';
 }

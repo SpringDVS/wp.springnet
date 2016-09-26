@@ -1,10 +1,10 @@
 <?php
 
-class SpringNetBulletinsLatest extends WP_Widget {
+class SpringNet_Bulletins_Latest extends WP_Widget {
 	function __construct() {
 
 		parent::__construct(
-			'springnet_bulletins_latest',
+			'SpringNet_Bulletins_Latest',
 			'Latest Bulletins',
 			array('description' => 'Display lastest bulletins on the Spring Network')
 			);

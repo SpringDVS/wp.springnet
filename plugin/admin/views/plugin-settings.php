@@ -16,11 +16,11 @@
 </h2>
 <?php 
 	if(!$tab) {
-		include(__DIR__.'/settings_node.php');
+		include(__DIR__.'/settings-node.php');
 	} else if('network' == $tab) {
-		include(__DIR__.'/settings_network.php');
+		include(__DIR__.'/settings-network.php');
 	} else if('certificate' == $tab) {
-		include(__DIR__.'/settings_certificate.php');
+		include(__DIR__.'/settings-certificate.php');
 	}
 ?>
 </div>

@@ -41,7 +41,15 @@ function springnet_activation_install() {
 			notif_description		TEXT,
 			PRIMARY KEY (notif_id)
 			) $charset_collate;";
-	$wpdb->query($sql3);
-
 	
+	$table4_name = $wpdb->prefix . 'sn_repo';
+	$sql4 = "CREATE TABLE IF NOT EXISTS $table4_name (
+			repo_id					MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+			repo_module				VARCHAR(64) NOT NULL,
+			repo_timestamp			TIMESTAMP,
+			repo_data				MEDIUMTEXT,
+			PRIMARY KEY (repo_id),
+			INDEX repo_module_id (repo_module,repo_id)
+			) $charset_collate;";
+	$wpdb->query($sql4);
 }

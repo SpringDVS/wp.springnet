@@ -23,12 +23,23 @@ define('SPRINGNET_VERSION', '0.1.0');
 
 require __DIR__.'/autoload.php';
 
-require __DIR__.'/plugin/activation.php';
-require __DIR__.'/plugin/update.php';
+if(is_admin()) {
+	require __DIR__.'/plugin/admin/activation.php';
+	require __DIR__.'/plugin/admin/update.php';
+}
 
 require __DIR__.'/plugin/models.php';
-require __DIR__.'/plugin/controllers.php';
-require __DIR__.'/plugin/views.php';
-require __DIR__.'/plugin/actions.php';
+
+
+if(is_admin() && (!defined( 'DOING_AJAX' ) || !DOING_AJAX) ) {
+	require __DIR__.'/plugin/admin/controllers.php';
+	require __DIR__.'/plugin/admin/views.php';
+	require __DIR__.'/plugin/admin/actions.php';
+} else {
+	require __DIR__.'/plugin/front/actions.php';
+}
+
+
+
 
 ?>

@@ -1,19 +1,8 @@
 <?php
-require SPRINGNET_DIR.'/plugin/handlers.php';
 define('SN_MENU_SLUG', 'springnet');
 define('SN_MODULE_ADMIN', '?page=springnet&module=');
 
-add_action( 'wp', 'springnet_service_hook' );
-
-function springnet_service_hook() {
-	if(is_page('spring')) {
-		require __DIR__.'/controllers/service_controller.php';
-		$response = springnet_service_request();
-		
-		echo $response;
-	}
-}
-
+require SPRINGNET_DIR.'/plugin/admin/handlers.php';
 
 
 add_action( 'admin_menu', 'springnet_menu');
@@ -51,6 +40,8 @@ function springnet_register_settings() {
 	register_setting('springnet-network-options', 'geonet_address');
 	register_setting('springnet-network-options', 'geonet_resource');
 	register_setting('springnet-network-options', 'geonet_token');
+	
+	register_setting('springnet-certificate-options', 'cert_accept_pull');
 
 }
 
@@ -85,7 +76,7 @@ function springnet_load_modules() {
 	$dirs = array_filter(glob(SPRINGNET_DIR.'/modules/*'), 'is_dir');
 	
 	foreach($dirs as $dir) {
-		$path = $dir.'/loader.php';
+		$path = $dir.'/admin-loader.php';
 		if(!file_exists($path)) continue;
 		include $path;
 	}	
