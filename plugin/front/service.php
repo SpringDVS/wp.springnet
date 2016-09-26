@@ -49,6 +49,9 @@ function springnet_protocol_service($msg) {
 		return "104";
 	}
 	
+	if(reset($uri->route()) != get_option('node_springname')) {
+		return "103"; // Network error -- it's not the right node
+	}
 	
 	$service = $resource_path[0];
 	array_shift($resource_path);
