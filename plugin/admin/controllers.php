@@ -108,6 +108,61 @@ function springnet_keyring_controller() {
 	 			}
 	 			
 	 			springnet_keyring_cert_display($key,$status,$notice);
+		 } elseif('pullreq' == $action) {
+		 	global $snrepo;
+		 	
+		 	$status = 'none';
+		 	$message = '';
+		 	
+		 	if(($method = filter_input(INPUT_GET, 'method'))) {
+		 		if('ignore' == $method) {
+		 			$reqid = filter_input(INPUT_GET, 'reqid');
+		 			$data = $snrepo->get_datum_from_id('cert_pullreq', $reqid);
+
+		 			if($data && $snrepo->remove_data_with_id('cert_pullreq', $reqid)) {
+		 				include SPRINGNET_DIR.'/plugin/models/class-notification-handler.php';
+		 				$handler = new Notification_Handler();
+		 				$handler->resolve_notification_id($data->repo_notif);
+		 				$status = 'success';
+		 				$message = "Ignored pull request from $data->repo_data";
+		 			} else {
+		 				$status = 'error';
+		 				$message = "An error occured ignoring pull request -- does request still exist?";
+		 			}
+		 		} else if('accept' == $method) {
+		 			$reqid = filter_input(INPUT_GET, 'reqid');
+		 			$data = $snrepo->get_datum_from_id('cert_pullreq', $reqid);
+		 			$pulled = $keyring->perform_pull($data->repo_data); 
+		 			if(!$pulled) {
+		 				$status = 'error';
+		 				$message = 'Something went wrong with the pull';
+		 			}
+		 			
+		 			$service = new PK_Service_Model();
+		 			$node_certificate = $keyring->get_node_public_key();
+		 			$response = $service->import($pulled, $node_certificate);
+		 			
+		 			if(!$response) {
+		 				$status = 'error';
+		 				$message = 'Failed to perform import service request';
+		 			} elseif($keyring->set_node_certificate(
+								$response['keyid'],
+								$response['email'],
+								$response['sigs'],
+								$response['armor'])) {
+						$status = 'success';
+						$message = 'Performed pull from ' . $data->repo_data;
+						$snrepo->remove_data_with_id('cert_pullreq', $reqid);
+						$handler->resolve_notification_id($data->repo_notif);
+					} else {
+						$status = 'error';
+						$message = 'Failed to update node certificate';
+					}
+		 		}
+		 	}
+		 	$requests = $snrepo->get_data_from_tag('cert_pullreq');
+		 	$requests = $requests ? $requests : array();
+		 	springnet_keyring_pullreq_display($requests, $status, $message);
 		 }
 
 		

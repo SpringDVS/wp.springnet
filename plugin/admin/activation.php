@@ -34,22 +34,24 @@ function springnet_activation_install() {
 	
 	$table3_name = $wpdb->prefix . 'sn_notifications';
 	$sql3 = "CREATE TABLE IF NOT EXISTS $table3_name (
-			notif_id			MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
-			notif_title			VARCHAR(128) NOT NULL,
+			notif_id				MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+			notif_title				VARCHAR(128) NOT NULL,
 			notif_action			VARCHAR(320) NOT NULL,
 			notif_source			VARCHAR(64)  NOT NULL,
+			notif_active			BOOLEAN NOT NULL DEFAULT 0,
 			notif_description		TEXT,
 			PRIMARY KEY (notif_id)
 			) $charset_collate;";
-	
+	$wpdb->query($sql3);
 	$table4_name = $wpdb->prefix . 'sn_repo';
 	$sql4 = "CREATE TABLE IF NOT EXISTS $table4_name (
 			repo_id					MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
-			repo_module				VARCHAR(64) NOT NULL,
+			repo_tag				VARCHAR(64) NOT NULL,
 			repo_timestamp			TIMESTAMP,
+			repo_notif				MEDIUMINT(9),
 			repo_data				MEDIUMTEXT,
 			PRIMARY KEY (repo_id),
-			INDEX repo_module_id (repo_module,repo_id)
+			INDEX repo_tag_id (repo_tag,repo_id)
 			) $charset_collate;";
 	$wpdb->query($sql4);
 }

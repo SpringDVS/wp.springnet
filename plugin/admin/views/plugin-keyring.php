@@ -6,6 +6,10 @@
 	<a href="?page=springnet_keyring&action=import" class="page-title-action">
 		Import
 	</a>
+	
+	<a href="?page=springnet_keyring&action=pullreq" class="page-title-action">
+		Pull Requests
+	</a>
 </h1>
 
 <table class="wp-list-table widefat fixed striped">

@@ -10,15 +10,35 @@ if(isset($res[1])) {
 		
 		$on_request = get_option('cert_accept_pull');
 		if('notification' == $on_request) {
+			global $snrepo;
+			if($snrepo->data_exists('cert_pullreq', $query['source'])) {
+				return array('request' => 'queued');
+			}
 			$handler = new Notification_Handler();
-			$handler->add_notification('Certificate Pull Request',
-										'page=springnet_cert',
+			$notif = $handler->add_notification('Certificate Pull Request',
+										'page=springnet_keyring&action=pullreq',
 										'Certificates',
 							"{$query['source']} is requesting an update to your
 							public certificate");
+			
+			
+			$snrepo->add_data('cert_pullreq', $query['source'], $notif);
+			
+			$handler->activate_notification($notif);
+			return array('request' => 'ok');
 		}
 		
 		return array('request' => 'ok'); 
+	} elseif('pull' == $res[1]) {
+		if(!isset($res[2]) || $res[2] == 'private') {
+			return array('key' => 'error');
+		}
+		$keyring = new Keyring_Model();
+		
+		$key = $keyring->get_key($res[2]);
+		
+		$key = $key ? $key : 'error';
+		return array('key' => $key);		
 	}
 }
 

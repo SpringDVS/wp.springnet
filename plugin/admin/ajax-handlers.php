@@ -40,7 +40,7 @@ function springnet_settings_generate_certificate_handler() {
 add_action('wp_ajax_settings_node_register',
 		'springnet_settings_node_register');
 function springnet_settings_node_register() {
-	if( !current_user_can('manage_options') ) { echo "Error"; wp_die(); } 
+	if( !current_user_can('manage_options') ) { echo "Error"; wp_die(); }
 	
 
 	require SPRINGNET_DIR.'/plugin/models/class-node-model.php';

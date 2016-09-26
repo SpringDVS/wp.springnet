@@ -1,7 +1,7 @@
 <div class="wrap">
 <?php springnet_uri_tag(); ?>
 <h1>Unlock Private Key</h1>
-<?php if(!is_admin()):?>
+<?php if( !current_user_can('manage_options')):?>
 <div class="notice notice-error"><p>
 	User requires <strong>Administrator</strong> role to unlock the 
 	node's private key.<a href="<?php echo $redirect; ?>">

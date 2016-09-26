@@ -16,7 +16,9 @@ class Keyring_Model {
 	}
 
 	public function get_node_private_key() {
-		if(!is_admin()) return false;
+		if(!current_user_can('manage_options')) {
+			return false;
+		}
 		return $this->db->get_var("SELECT armor FROM $this->table
 				WHERE owned=1 AND keyid='private'");
 	}
@@ -32,8 +34,6 @@ class Keyring_Model {
 	}
 	
 	public function set_node_certificate($keyid, $email, $sigs, $armor) {
-		if(!is_admin()) return false;
-		
 		$name = get_option('node_uri');
 		return $this->set_certificate($keyid, $name, $email, $sigs, 
 										$armor,'owned');
@@ -49,22 +49,39 @@ class Keyring_Model {
 									$armor, $status = 'other')
 	{
 		if('private' == $keyid) {
-			if(!is_admin()) return false;
+			if(!current_user_can('manage_options')) {
+				return false;
+			}
 		}
 
 		$owned = $status == 'owned' ? 1 : 0;
 		$sigtext = implode(',', $sigs);
-		$prepared = $this->db->prepare(
-						"INSERT INTO $this->table
-						 (keyid, uidname, uidemail, sigs, armor, owned)
-						 VALUES
-						 (%s,%s,%s,%s,%s,%s)
-						 ON DUPLICATE KEY
-						 UPDATE sigs=%s,armor=%s",
-						$keyid, $name, $email, $sigtext, $armor, $owned,
-						$sigtext, $armor);
-		
-		return $this->db->query($prepared);
+
+		if(!$this->get_uid_name($keyid)) {
+			return $this->db->insert($this->table, array (
+					'keyid' => $keyid,
+					'uidname' => $name,
+					'uidemail' => $email,
+					'sigs' => $sigtext,
+					'armor' => $armor,
+					'owned' => $owned
+				),array('%s','%s','%s','%s','%s','%d'));
+
+		} else {
+
+			$rows = $this->db->update($this->table, array(
+				'sigs' => $sigtext,
+				'armor' => $armor
+				),
+				array('keyid' => $keyid),
+				array('%s','%s'),
+				array('%s')
+			);
+			var_dump($this->db->last_query);
+			return $rows;
+		}
+
+
 	}
 	
 	public function get_certificate($keyid) {
@@ -78,7 +95,7 @@ class Keyring_Model {
 	}
 	
 	public function remove_certificate($keyid) {
-		if(!is_admin() || !$keyid || 'private' == $keyid) {
+		if(!current_user_can('manage_options') || !$keyid || 'private' == $keyid) {
 			return false;
 		}
 		
@@ -148,6 +165,37 @@ class Keyring_Model {
 		$prepared = $this->db->prepare("SELECT uidname FROM $this->table
 				WHERE keyid = %s", $keyid);
 		return $this->db->get_var($prepared);
+	}
+	
+	public function perform_pull($uri) {
+		if(substr($uri, 0, 9) != 'spring://') {
+			$uri = "spring://$uri"; 
+		}
+
+		require_once SPRINGNET_DIR.'/plugin/models/class-http-service.php';
+		$service = new HTTP_Service();
+		$keyid = $this->get_node_keyid();
+		try {
+			
+			$node = $service->dvsp_resolve($uri);
+			
+			if(!$node || !isset($node[0])) {
+				return false;
+			}
+			$node = $node[0];
+			$message = SpringDvs\Message::fromStr("service $uri/cert/pull/$keyid");
+			
+			$response = $service->dvsp_request($node->host(), $message);
+			if($response->content()->code() != \SpringDvs\ProtocolResponse::Ok) {
+				return false;
+			}
+			$response_array = json_decode($response->content()->content()->get(), true);
+			$key = array_pop($response_array);
+			$key = isset($key['key']) ?  $key['key'] : false;
+			return $key;
+		} catch(Exception $e) {
+			return false;
+		}
 	}
 	
 	public function has_private_key() {

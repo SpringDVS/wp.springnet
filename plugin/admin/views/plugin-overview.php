@@ -22,7 +22,7 @@
 						<ul class="springnet-notification-list">
 						<?php foreach($notifications as $notif): ?>
 							<li>
-								<a href="<?php echo $notif->notif_action; ?>&_actionid=<?php echo $notif->notif_id; ?>">
+								<a href="?<?php echo $notif->notif_action; ?>&_actionid=<?php echo $notif->notif_id; ?>">
 									<?php echo $notif->notif_title; ?>
 								</a>	<br>
 								<span class="source"><?php echo $notif->notif_source; ?></span>

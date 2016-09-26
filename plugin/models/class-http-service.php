@@ -40,6 +40,7 @@ class HTTP_Service {
 			$string = $message->toStr();
 		}
 		$response = self::post_request($host, $string);
+		
 		try {
 			return \SpringDvs\Message::fromStr($response);
 		} catch(Exception $e) {
@@ -47,5 +48,34 @@ class HTTP_Service {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Perform a DVSP resolution request with a primary hub or other node
+	 * 
+	 * @param String $uri The URI of the node to resolve
+	 */
+	public static function dvsp_resolve($uri) {
+
+			$message = SpringDvs\Message::fromStr("resolve $uri");
+
+			$response = self::dvsp_request(get_option('geonet_hostname'),
+					$message);
+		
+			if(!$response
+			|| $response->cmd() != \SpringDvs\CmdType::Response
+			|| $response->content()->code() != \SpringDvs\ProtocolResponse::Ok) {
+				return false;
+			}
+			$type = $response->content()->type();
+			switch($type) {
+				case \SpringDvs\ContentResponse::Network:
+					return $response->content()->content()->nodes();
+				case \SpringDvs\ContentResponse::NodeInfo:
+					return array($response->content()->content());
+				default:
+					return false;
+			}
+
 	}
 }

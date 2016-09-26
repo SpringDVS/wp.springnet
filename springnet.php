@@ -29,7 +29,9 @@ if(is_admin()) {
 }
 
 require __DIR__.'/plugin/models.php';
-
+require __DIR__.'/plugin/models/class-repo-handler.php';
+global $snrepo;
+$snrepo = new Repo_Handler();
 
 if(is_admin() && (!defined( 'DOING_AJAX' ) || !DOING_AJAX) ) {
 	require __DIR__.'/plugin/admin/controllers.php';

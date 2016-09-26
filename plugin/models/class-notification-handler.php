@@ -11,11 +11,16 @@ class Notification_Handler {
 	
 	public function add_notification($title, $action, $source, $description) {
 		
-		$prepared = $this->db->prepare("INSERT INTO $this->table
-				(notif_title,notif_action,notif_source,notif_description)
-				VALUES (%s,%s,%s,%s)", $title, $action, $source, $description);
-
-		return $this->db->query($prepared);
+		$this->db->insert($this->table, array(
+				'notif_title' => $title,
+				'notif_action' => $action,
+				'notif_source' => $source,
+				'notif_description' => $description,
+				'notif_active' => '0'
+		));
+		
+		return $this->db->insert_id;
+		
 	}
 	
 	public function get_notifications($paged = 1) {
@@ -25,7 +30,7 @@ class Notification_Handler {
 		$from = ($paged-1) * $limit;
 		
 		$prepared = $this->db->prepare("SELECT * FROM $this->table
-				ORDER BY notif_id DESC
+				WHERE notif_active = 1 ORDER BY notif_id DESC
 				LIMIT %d,%d
 				",
 				$from, $limit);
@@ -43,6 +48,20 @@ class Notification_Handler {
 				WHERE notif_action = %s",
 				$action);
 		return $this->db->query($prepared);
+	}
+	
+	public function activate_notification($id) {
+		return $this->db->update($this->table,
+				array(
+					'notif_active' => 1
+				),
+				array(
+					'notif_id' => $id
+				),
+				array('%d'),
+				array('%d')
+				
+			);
 	}
 	
 	private function get_notification_count() {

@@ -23,3 +23,7 @@ function springnet_keyring_unlock_display($reason, $status,$redirect) {
 function springnet_keyring_cert_display($key, $status = 'none', $notice='') {
 	include __DIR__."/views/keyring-certificate.php";
 }
+
+function springnet_keyring_pullreq_display($requests, $status, $message) {
+	include __DIR__."/views/keyring-pull-requests.php";
+}
