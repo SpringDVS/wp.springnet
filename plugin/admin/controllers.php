@@ -115,6 +115,7 @@ function springnet_keyring_controller() {
 		 	$message = '';
 		 	
 		 	if(($method = filter_input(INPUT_GET, 'method'))) {
+		 		
 		 		if('ignore' == $method) {
 		 			$reqid = filter_input(INPUT_GET, 'reqid');
 		 			$data = $snrepo->get_datum_from_id('cert_pullreq', $reqid);
@@ -129,7 +130,10 @@ function springnet_keyring_controller() {
 		 				$status = 'error';
 		 				$message = "An error occured ignoring pull request -- does request still exist?";
 		 			}
+
 		 		} else if('accept' == $method) {
+		 			
+		 			include SPRINGNET_DIR.'/plugin/models/class-notification-handler.php';
 		 			$reqid = filter_input(INPUT_GET, 'reqid');
 		 			$data = $snrepo->get_datum_from_id('cert_pullreq', $reqid);
 		 			$pulled = $keyring->perform_pull($data->repo_data); 
@@ -139,6 +143,8 @@ function springnet_keyring_controller() {
 		 			}
 		 			
 		 			$service = new PK_Service_Model();
+		 			$handler = new Notification_Handler();
+
 		 			$node_certificate = $keyring->get_node_public_key();
 		 			$response = $service->import($pulled, $node_certificate);
 		 			
@@ -159,6 +165,7 @@ function springnet_keyring_controller() {
 						$message = 'Failed to update node certificate';
 					}
 		 		}
+
 		 	}
 		 	$requests = $snrepo->get_data_from_tag('cert_pullreq');
 		 	$requests = $requests ? $requests : array();

@@ -77,7 +77,6 @@ class Keyring_Model {
 				array('%s','%s'),
 				array('%s')
 			);
-			var_dump($this->db->last_query);
 			return $rows;
 		}
 
