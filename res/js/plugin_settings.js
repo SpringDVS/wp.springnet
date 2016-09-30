@@ -48,7 +48,7 @@ jQuery(document).ready(function($) {           //wrapper
     	$('#error-banner').hide();
     	
     	if($("#input_cert_passphrase").val() != $("#input_cert_passcheck").val()) {
-    		$('#error-banner').text("Passphrases do not match");
+    		$('#error-banner-text').text("Passphrases do not match");
     		$('#error-banner').show();
     		return;
     	}
@@ -59,8 +59,16 @@ jQuery(document).ready(function($) {           //wrapper
             action: "settings_generate_certificate",
             passphrase: $("#input_cert_passphrase").val(),
             email: $("#input_cert_email").val(),
-        }, function(data) {
+        }, function(json) {
+        	response = $.parseJSON(json);
+        	if(response.result == "error") {
+        		$('#error-banner-text').text(response.reason);
+        		$('#error-banner').show();
+        		return;
+        	}
+        	
         	location.reload();
+        	
         });
         
         return false;
@@ -122,4 +130,46 @@ jQuery(document).ready(function($) {           //wrapper
         
         return false;
     });
+});
+
+
+jQuery(document).ready(function($) {
+	if(!$("#key-reset-button").length) {
+		return;
+	}
+	
+	$("#key-reset-button").click(function() {
+		$("#key-reset-button").hide();
+		$('#input-validate-request').val("");
+		$("#key-reset-form").show();
+		return false;
+	});
+	
+	$("#key-reset-button-actual").click(function() {
+		springname = $('#input-validate-request').val();
+		
+	       $.post(sn_settings.ajax_url, {
+	           _ajax_nonce: sn_settings.nonce,
+	            action: "settings_certificate_reset",
+	            validation: springname,
+	            state: state,
+	        	}, function(data) {
+	        		response = $.parseJSON(data);
+	        		if(response.result == "error") {
+	        	 		$('#error-banner-text').text("Your springname you supplied was not correct -- cannot reset certificates");
+	            		$('#error-banner').show();
+	            		return;
+	        		}
+	        		
+	        		location.reload();
+	        	});
+		return false;
+	});
+	
+	$("#key-reset-button-cancel").click(function() {
+		$("#key-reset-button").show();
+		$("#key-reset-form").hide();
+		$('#error-banner').hide();
+		return false;
+	});
 });

@@ -96,3 +96,25 @@ function springnet_settings_node_state() {
 	
 	wp_die();
 }
+
+
+add_action('wp_ajax_settings_certificate_reset',
+		'springnet_settings_certificate_reset');
+function springnet_settings_certificate_reset() {
+
+	if( !current_user_can('manage_options') ) { echo "Error"; wp_die(); }
+
+	require SPRINGNET_DIR.'/plugin/models/class-keyring-model.php';
+
+	$springname = filter_input(INPUT_POST, 'validation');
+
+	if($springname == get_option('node_springname')) {
+		$keyring = new Keyring_Model();
+		$keyring->reset_node_keys();
+		echo '{"result":"ok"}';
+	} else {
+		echo '{"result":"error"}'; 
+	}
+
+	wp_die();
+}
