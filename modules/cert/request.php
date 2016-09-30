@@ -64,6 +64,11 @@ if(isset($res[1])) {
 		
 		$key = $key ? $key : 'error';
 		return array('key' => $key);		
+	} elseif('key' == $res[1]) {
+		$keyring = new Keyring_Model();
+
+		$key = $keyring->get_node_certificate();
+		return array('key' => $key[0]->armor);
 	}
 }
 
