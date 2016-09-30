@@ -22,10 +22,32 @@ function springnet_settings_generate_certificate_handler() {
 	$name = get_option('node_uri');
 	$keypair = $service->generate_keypair($name, $email, $passphrase);
 
-	if(!$keypair) echo "-1";
+	
+
+	if(!$keypair
+	|| "" == $keypair['private']
+	|| "" == $keypair['public']) {
+		echo '{"result" : "error", "reason" : "Server error -- Recieved malformed keys.  Please try again or contact spring@care-connections.org"}';
+		wp_die();
+	}
 	$service->keyring()->set_node_private($keypair['private']);
 	$key = $service->import($keypair['public']);
-	//echo json_encode($response);
+	
+	
+	
+	if(!$key) {
+		$service->keyring()->reset_node_keys();
+		echo '{"result" : "error", "reason" : "Server error -- Recieved blank import. Please try again or contact spring@care-connections.org"}';
+		wp_die();
+	}
+
+	foreach($key as $item) {
+		if("" == $item) {
+			$service->keyring()->reset_node_keys();
+			echo '{"result" : "error", "reason" : "Server error -- Recieved malformed import. Please try again or contact spring@care-connections.org"}';
+			wp_die();
+		}
+	}
 
 	$service->keyring()->set_node_certificate($key['keyid'],
 			$key['email'],

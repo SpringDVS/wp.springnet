@@ -41,8 +41,17 @@ class Keyring_Model {
 	
 	public function set_node_private($armor) {
 		// is_admin checked inside set_certificate for 'private'
-		return $this->set_certificate('private', 'private', 'private', '',
+		return $this->set_certificate('private', 'private', 'private', array(),
 										$armor, 'owned');
+	}
+	
+	public function reset_node_keys() {
+		if(!current_user_can('manage_options')) {
+			return false;
+		}
+		
+		return $this->db->query("DELETE FROM $this->table
+				WHERE owned=1");		
 	}
 
 	public function set_certificate($keyid, $name, $email, $sigs, 
