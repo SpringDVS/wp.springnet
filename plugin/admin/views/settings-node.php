@@ -1,16 +1,15 @@
 <?php defined( 'ABSPATH' ) or die( 'Error' ); ?>
 <div class="notice notice-error" id="error-banner" style="display:none;"></div>
-
-<?php if(!$has_public_cert):?>
-	<div class="notice notice-error" id="error-banner">
-		<p>Node does not have a public certificate -- please use the 
-		<em><a href="?page=springnet_options&tab=certificate">Certificate</a></em> tab to generate one.</p>
-	</div>
-<?php endif; ?>
 <?php if(!$has_uri || !$has_token):?>
 	<div class="notice notice-error" id="error-banner">
 		<p>Node does not have a valid network setup -- please use the 
 		<em><a href="?page=springnet_options&tab=network">Network</a></em> tab to configure.</p>
+	</div>
+<?php endif; ?>
+<?php if(!$has_public_cert):?>
+	<div class="notice notice-error" id="error-banner">
+		<p>Node does not have a public certificate -- please use the 
+		<em><a href="?page=springnet_options&tab=certificate">Certificate</a></em> tab to generate one.</p>
 	</div>
 <?php endif; ?>
 
