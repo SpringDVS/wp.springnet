@@ -249,6 +249,9 @@ function springnet_settings_certificate_controller() {
 
 function springnet_settings_network_controller() {
 	$tab = 'network';
+	if(!get_option('node_hostname')) {
+		update_option('node_hostname',  $_SERVER['HTTP_HOST']);  
+	};
 	include __DIR__."/views/plugin-settings.php";
 }
 
