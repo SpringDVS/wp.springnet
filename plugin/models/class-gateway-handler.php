@@ -34,19 +34,19 @@ class Gateway_Handler {
 												$message);
 
 		if(!$response
-				|| $response->cmd() != \SpringDvs\CmdType::Response
-				|| $response->content()->code() != \SpringDvs\ProtocolResponse::Ok) {
-					return false;
-				}
-				$type = $response->content()->type();
-				switch($type) {
-					case \SpringDvs\ContentResponse::Network:
-						return $response->content()->content()->nodes();
-					case \SpringDvs\ContentResponse::NodeInfo:
-						return array($response->content()->content());
-					default:
-						return false;
-				}
+		|| $response->cmd() != \SpringDvs\CmdType::Response
+		|| $response->content()->code() != \SpringDvs\ProtocolResponse::Ok) {
+				return false;
+			}
+		$type = $response->content()->type();
+		switch($type) {
+			case \SpringDvs\ContentResponse::Network:
+				return $response->content()->content()->nodes();
+			case \SpringDvs\ContentResponse::NodeInfo:
+				return array($response->content()->content());
+			default:
+				return false;
+		}
 
 	}
 
@@ -61,7 +61,7 @@ class Gateway_Handler {
 	 *
 	 * @param \SpringDvs\Message $msg
 	 * @param array $nodes
-	 * @return mixed \SpringDvs\Message on success | null on failure
+	 * @return \SpringDvs\Message on success
 	 */
 	public static function outbound_first_response(\SpringDvs\Message $msg, array $nodes) {
 
@@ -69,13 +69,30 @@ class Gateway_Handler {
 			$response = Http_Service::dvsp_request($node->host(), $msg);
 
 			if($response === false
-					|| $response->cmd() != \SpringDvs\CmdType::Response
-					|| $response->content()->code() != \SpringDvs\ProtocolResponse::Ok) {
+			|| $response->cmd() != \SpringDvs\CmdType::Response
+			|| $response->content()->code() != \SpringDvs\ProtocolResponse::Ok) {
 						continue;
-					}
-					return $response;
+			}
+			return $response;
 		}
 
 		return null;
+	}
+	
+	/**
+	 * Perform a request on a given URI and take the first response
+	 * 
+	 * This method combines the resolution and request. If any fail it returns
+	 * false otherwise it returns a message
+	 * 
+	 * @param String $uri The URI to make the request
+	 * @param \SpringDvs\Message $msg The message to send
+	 * @return \SpringDvs\Message
+	 */
+	public static function request_uri_first_response($uri, \SpringDvs\Message $msg) {
+		$nodes = Gateway_Handler::resolve_uri($uri);
+		if(!$nodes) return false;
+		
+		return Gateway_Handler::outbound_first_response($msg, $nodes);
 	}
 }
