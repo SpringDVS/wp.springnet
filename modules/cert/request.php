@@ -12,7 +12,7 @@ if(isset($res[1])) {
 		if('notification' == $on_request) {
 			global $snrepo;
 			if($snrepo->data_exists('cert_pullreq', $query['source'])) {
-				return array('request' => 'queued');
+				return array('result' => 'queued');
 			}
 			$handler = new Notification_Handler();
 			$notif = $handler->add_notification('Certificate Pull Request',
@@ -25,7 +25,7 @@ if(isset($res[1])) {
 			$snrepo->add_data('cert_pullreq', $query['source'], $notif);
 			
 			$handler->activate_notification($notif);
-			return array('request' => 'ok');
+			return array('result' => 'ok');
 		} else {
 			require_once SPRINGNET_DIR.'/plugin/models/class-pk-service-model.php';
 			
@@ -33,7 +33,7 @@ if(isset($res[1])) {
 			
 			$pulled = $keyring->perform_pull($query['source']);
 			if(!$pulled) {
-				return array('request' => 'error');
+				return array('result' => 'error');
 			}
 			
 			$service = new PK_Service_Model();
@@ -49,9 +49,9 @@ if(isset($res[1])) {
 					$response['email'],
 					$response['sigs'],
 					$response['armor'])) {
-				return array('request' => 'ok');
+				return array('result' => 'ok');
 			} else {
-				return array('request' => 'error');
+				return array('result' => 'error');
 			}
 		}
 	} elseif('pull' == $res[1]) {
