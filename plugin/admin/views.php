@@ -12,7 +12,7 @@ function springnet_keyring_display($keyring, $count, $paged, $total_pages, $limi
 	include __DIR__."/views/plugin-keyring.php";
 }
 
-function springnet_keyring_import_display($status, $uid_name) {
+function springnet_keyring_import_display($status, $uid_name, $reason, $key) {
 	include __DIR__."/views/keyring-import.php";
 }
 

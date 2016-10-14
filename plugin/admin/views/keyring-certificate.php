@@ -10,6 +10,7 @@
 <?php return; endif;?>
 
 
+
 <?php if(!$key):?>
 	<h1>Certificate</h1>
 	<div class="notice notice-error">Unable to load certificate</div>
@@ -27,8 +28,31 @@
 			class="page-title-action">
 				Sign Certificate
 		</a>
+	<?php else: ?>
+		<a href="?page=springnet_keyring&keyid=<?php echo $key->keyid; ?>&action=requestpull"
+			class="page-title-action">
+				Make Pull Request
+		</a>
 	<?php endif; ?>
+	
 </h1>
+
+<?php if('information' == $status):?>
+	<div class="notice notice-info is-dismissible"><p><?php echo $notice; ?></p></div>
+	</div>
+<?php endif;?>
+
+<?php if('error' == $status):?>
+	<div class="notice notice-error is-dismissible"><p><?php echo $notice; ?></p></div>
+	</div>
+<?php endif;?>
+
+<?php if('requested' == $status):?>
+	<div class="notice notice-success is-dismissible"><p><?php echo $notice; ?></p></div>
+	</div>
+<?php endif;?>
+
+
 <a href="?page=springnet_keyring">Back to keyring</a>
 <table class="form-table">
 		<tr>

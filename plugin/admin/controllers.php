@@ -31,7 +31,9 @@ function springnet_keyring_controller() {
 			
 			$service = new PK_Service_Model();
 			$status = 'none';
+			$reason = '';
 			$name = '';
+			$key = '';
 			if( ($certificate = filter_input(INPUT_POST, 'certificate')) ) {
 				$response = $service->import($certificate);
 				
@@ -50,10 +52,51 @@ function springnet_keyring_controller() {
 					$name = $response['name'];
 				} else {
 					$status = 'error';
+					$reason = 'There was an error importing certificate.
+								Please contact
+								<a href="mailto:spring@care-connections.org">
+									spring@care-connections.org
+								</a> if it continues to fail';
+				}
+			} else if($uri = filter_input(INPUT_POST, 'request-uri')) {
+				
+				include SPRINGNET_DIR.'/plugin/models/class-gateway-handler.php';
+				
+				if(substr($uri, 0,10) != "spring://") {
+					$uri = "spring://$uri";
+				}
+				
+				$msg = \SpringDvs\Message::fromStr("service $uri/cert/key");
+				$response = Gateway_Handler::request_uri_first_response($uri, $msg);
+
+				if(!$response) {
+					$status = 'error';
+					$reason = 'Failed to perform request -- does node exist?';					
+				} else {
+					$json = '';
+					try {
+						
+						$json = $response->getContentResponse()->getServiceText()->get();
+						$tmp = json_decode($json, true);
+						$o = array_shift($tmp);
+						if($o['key'] == 'error') {
+							$status = 'error';
+							$reason = 'Certificate request resulted in an error';
+						
+						} else {
+							$key = $o['key'];
+						}
+						
+					} catch(\Exception $e) {
+						$status = 'error';
+						$reason = 'Unexpected response from request of certificate';
+					}
+					
+				
 				}
 			}
 			
-			springnet_keyring_import_display($status, $name);
+			springnet_keyring_import_display($status, $name, $reason, $key);
 			
 		 }  elseif('sign' == $action) {
 		 	
@@ -166,10 +209,56 @@ function springnet_keyring_controller() {
 					}
 		 		}
 
-		 	}
+		 	} 
 		 	$requests = $snrepo->get_data_from_tag('cert_pullreq');
 		 	$requests = $requests ? $requests : array();
 		 	springnet_keyring_pullreq_display($requests, $status, $message);
+		 } else if('requestpull' == $action && ($keyid = filter_input(INPUT_GET, 'keyid'))) {
+		 	$key = $keyring->get_resolved_certificate($keyid);
+		 	$key = isset($key[0]) ? $key = $key[0] : null;
+		 	$status = 'none';
+		 	$reasons = '';
+		 	
+		 	if($key) {
+		 		include SPRINGNET_DIR.'/plugin/models/class-gateway-handler.php';
+		 		$uri = "spring://{$key->uidname}";
+		 		$source = get_option('node_uri');
+		 		$msg = \SpringDvs\Message::fromStr("service $uri/cert/pullreq?source={$source}");
+		 		$response = Gateway_Handler::request_uri_first_response($uri, $msg);
+		 		if($response) {
+		 			try {
+		 				$t = json_decode($response->getContentResponse()->getServiceText()->get(), true);
+		 				$o = array_shift($t);
+		 				$result = null;
+		 				$result = isset($o['request']) ? $o['request']
+		 							: ( isset($o['result']) ? $o['result']
+		 								: null);
+		 				
+		 				
+		 				if('ok' == $result) {
+		 					$status = 'requested';
+		 					$reason = 'Pull request made with node';
+		 				} else if('queued' == $result) {
+		 					$status = 'information';
+		 					$reason = 'There is already a Pull Request queued at the node';		 					
+		 				} else if('error' == $result) {
+		 					$status = 'error';
+		 					$reason = 'Node responded with an error';
+		 				} else {
+		 					$status = 'error';
+		 					$reason = 'Node gave unexpected result from request';
+		 				}
+		 			} catch(\Exception $e) {
+		 				$status = 'error';
+		 				$reasons = 'Unexpected response from request';
+		 			}
+		 		} else {
+		 			$status = 'error';
+		 			$reasons = 'Failed to perform request';		 			
+		 		}
+		 	}
+		 	
+		 	springnet_keyring_cert_display($key, $status, $reason);
 		 }
 
 		
