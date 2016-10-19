@@ -63,6 +63,7 @@ class SpringNet_Bulletins_Latest extends WP_Widget {
 		</div>
 		<script type="text/javascript">SNetBulletinsLatestCli.request(<?php echo "'$uri','$query'" ?>);</script>
 		<?php
+		echo $after_widget;
 	}
 }
 
