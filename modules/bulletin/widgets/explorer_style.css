@@ -28,9 +28,14 @@ div.snetb-explorer div.tab-button-active a {
 div.snetb-explorer table.listing {
 	border-width: 0px;
 	border-top: 1px solid grey;
+	background: transparent;
 }
 
-div.snetb-explorer table.listing tbody
+div.snetb-explorer table.listing td {
+	padding: 0.5em;
+}
+
+div.snetb-explorer table.listing tbody,
 div.snetb-explorer table.listing tr,
 div.snetb-explorer table.listing td {
 	border: none;
