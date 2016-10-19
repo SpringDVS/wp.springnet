@@ -22,10 +22,16 @@ if(isset($resource_path[0]) && !empty($resource_path[0])) {
 
 $limit = isset($query['limit']) ? intval($query['limit']) : 10;
 
+$category = isset($query['categories']) ? $query['categories'] : null; 
+
 $args = array( 'post_type' => 'springnet_bulletin', 'posts_per_page' => $limit );
 
 if(isset($query['tags'])) {
 	$args['tag'] = $query['tags'];
+}
+
+if(isset($query['categories'])) {
+	$args['category_name'] = $query['categories'];
 }
 
 $loop = new WP_Query( $args );

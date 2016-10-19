@@ -15,6 +15,7 @@ function springnet_bulletin_post_type_register() {
 					'public' => true,
 					'has_archive' => true,
 					'taxonomies' => array('post_tag')
+					'taxonomies' => array('post_tag','category')
 			)
 			);
 }
