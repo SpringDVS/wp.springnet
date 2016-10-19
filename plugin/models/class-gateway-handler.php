@@ -95,4 +95,18 @@ class Gateway_Handler {
 		
 		return Gateway_Handler::outbound_first_response($msg, $nodes);
 	}
+	
+	/**
+	 * Convert a multicast service response to array
+	 * @param \SpringDvs\Message $response
+	 */
+	public static function multicast_service_array($response) {
+		if(!$response) return null;
+
+		try {
+			return explode("|", $response->getContentResponse()->getServiceText()->get());
+		} catch(\Exception $e) {
+			return null;
+		}
+	}
 }
