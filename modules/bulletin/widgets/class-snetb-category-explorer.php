@@ -86,5 +86,6 @@ class Snetb_Category_Explorer extends WP_Widget {
 			</div> <!-- snet-explorer -->
 			<script type="text/javascript">SnetbExplorerClient.request(<?php echo "'$uri','$selected'" ?>);</script>
 			<?php
+			echo $after_widget;
 		}
 }
