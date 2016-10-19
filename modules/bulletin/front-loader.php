@@ -53,7 +53,7 @@ function springnet_bulletin_request_gateway_handler() {
 add_action('wp_ajax_gateway_bulletin_explore',
 		'springnet_bulletin_explore_handler');
 
-add_action('wp_ajax_nopriv_gateway_bulletin_request',
+add_action('wp_ajax_nopriv_gateway_bulletin_explore',
 		'springnet_bulletin_explore_handler');
 
 function springnet_bulletin_explore_handler() {
