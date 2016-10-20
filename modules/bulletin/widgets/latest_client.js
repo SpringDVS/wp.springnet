@@ -1,11 +1,12 @@
 
 var SNetBulletinsLatestCli = {
     network: "",
-    request: function(network, query) {
+    tags: "",
+    limit: "",
+    activeAnchor: undefined,
+
+    request: function(network, tags, limit) {
     	SNetBulletinsLatestCli.network = network;
-    	query = query == '' ? '' : '?'+query;
-    	
-    	uri = network+"/bulletin/"+query;
 
         var $j = jQuery.noConflict();
         $j('#spring-bulletin-loader').show();
@@ -13,7 +14,9 @@ var SNetBulletinsLatestCli = {
     	$j.post(sn_gateway_bulletin.ajax_url, {
             _ajax_nonce: sn_gateway_bulletin.nonce,
              action: "gateway_bulletin_request",
-             uri: uri,
+             network: network,
+             tags: tags,
+             limit: limit
     	}, function(response) {
     		data = $j.parseJSON(response);
     	    if(data.service == "error"){ console.log("Service Error"); return; }
@@ -23,21 +26,22 @@ var SNetBulletinsLatestCli = {
 
     },
     
-    rerequest: function(query) {
-        tag = query == "" ? "none" : query;
+    rerequest: function(tags) {
+        self.tags = tags;
+        tags = tags == "" ? "none" : tags;
         var $j = jQuery.noConflict();
         
-        $j("#sdvs-bulletin-list-filter").text(tag);
-        query = query == "" ? "" : "tags="+query;
+        $j("#sdvs-bulletin-list-filter").text(tags);
+
         SNetBulletinsLatestCli.request(
             SNetBulletinsLatestCli.network,
-            query
+            self.tags,
+            self.limit
         );
         
     },
     
     requestProfile: function(node) {
-        uri = node+"/orgprofile/";
 
         var $j = jQuery.noConflict();
         $j('#spring-bulletin-loader').show();
@@ -45,7 +49,7 @@ var SNetBulletinsLatestCli = {
     	$j.post(sn_gateway_bulletin.ajax_url, {
             _ajax_nonce: sn_gateway_bulletin.nonce,
              action: "gateway_bulletin_request",
-             uri: uri,
+             node: node,
     	}, function(response) {
     		data = $j.parseJSON(response);
     	    if(data.service == "error"){ console.log("Service Error"); return; }
@@ -55,17 +59,17 @@ var SNetBulletinsLatestCli = {
     },
     
     requestContent: function(node, uid) {
-        uri = node+"/bulletin/"+uid+"/";
 
-        var $j = jQuery.noConflict();
+    	var $j = jQuery.noConflict();
         $j('#spring-bulletin-loader').show();
         
        	$j.post(sn_gateway_bulletin.ajax_url, {
             _ajax_nonce: sn_gateway_bulletin.nonce,
              action: "gateway_bulletin_request",
-             uri: uri,
+             node: node,
+             uid: uid
     	}, function(response) {
-    		data = $j.parseJSON(response);
+    		var data = $j.parseJSON(response);
     		if(data.service == "error"){ console.log("Service Error"); return; }
     		if(data.status != "ok"){ console.log("Service Error"); console.log(data.uri); return; }
     		SNetBulletinsLatestCli.applyContent(data.content);
@@ -73,16 +77,20 @@ var SNetBulletinsLatestCli = {
 
     },
     
+    safeEid: function(node) {
+   	 return "snetbl303-" + node.replace(/\./g, "-");
+    },
+    
     apply: function(bulletins) {
         
         var $j = jQuery.noConflict();
-        html = "";
+        var html = "";
         for(index in bulletins) {
             for(node in  bulletins[index]) {
-                list = bulletins[index][node];
+                var list = bulletins[index][node];
                 
-                list_html = "";
-                l = list.length-1;
+                var list_html = "";
+                var l = list.length-1;
                 for(i in list) {
                     item = list[i];
                     
@@ -103,14 +111,11 @@ var SNetBulletinsLatestCli = {
                     }
                 }
                 
-                eid = node.replace(/\./g, "-");
+                var eid = node.replace(/\./g, "-");
                 
-                html += [
+               html += [
                     "<tr><td class='node-uri'>",
-                    "<a href='javascript:void(0);' onclick='SNetBulletinsLatestCli.requestProfile(`"+node+"`)'>"+node+"</a> &rsaquo;&rsaquo;",
-                    "</td></tr>",
-                    
-                    "<tr id='"+eid+"-profile'class='profile-view'><td>",
+                    "<a id='"+this.safeEid(node)+"-profile' href='javascript:void(0);'>"+node+"</a> &rsaquo;&rsaquo;",
                     "</td></tr>",
 
                     "<tr><td><table class='inner'><tbody>"+list_html+"</tbody></table></td></tr>"
@@ -119,38 +124,67 @@ var SNetBulletinsLatestCli = {
                 
             }
         }
+        
+
+	
+		
+		
         $j("#sdvs-bulletin-list-body").empty();
         $j("#sdvs-bulletin-list-body").html(html);
         $j('#spring-bulletin-loader').hide();
+        
+        for(index in bulletins) {
+            for(node in  bulletins[index]) {
+            	
+            	var v = function(node) {
+            		prefix = SNetBulletinsLatestCli.safeEid(node)
+            		$j('#'+prefix+'-profile').click(function(){            		
+	            		SnetPopup.clearPopups();
+	            		var idPopup = prefix+"-popup";
+	            		SNetBulletinsLatestCli.activeAnchor = new PopupAnchor(idPopup, this.id)
+	            		SNetBulletinsLatestCli.requestProfile(node);
+            		});
+            	};
+            	
+            	v(node);
+            }
+        }
     },
 
     applyProfile: function(profile) {
-        var $j = jQuery.noConflict();
+    	
+       	var $j = jQuery.noConflict();
+    	var pid = SNetBulletinsLatestCli.activeAnchor.id;
+    	var anchor = SNetBulletinsLatestCli.activeAnchor.anchor;
+		var pos = $j('#'+anchor).position();
+		var arrowLeft = 20;
+		var left = pos.left;
+		var top = pos.top + 20;
+		
+		
+		
+    	
+    	
+    	var m = "";
         for(index in profile) {
             for(node in profile[index]) {
-                eid = node.replace(/\./g, "-");
-                
-                item = profile[index][node];
-                html = [
-                    "<div class='profile-block'>",
-                    "<h3>"+item.name+"</h3>",
-                    "<a target='_blank' href='"+item.website+"'>"+item.website+"</a><br>",
-                    "<a class='control' href='javascript:void(0);' onclick='SNetBulletinsLatestCli.hideProfile(`"+node+"`)'>hide</a>",
-                    "</div>"
-                ].join('\n');
-                element = $j("#"+eid+"-profile");
-                element.html(html);
-                element.show();
-                
+                                
+                var item = profile[index][node];
+                m = [
+        		         '<h3 class="snetbx-popup">' + item.name + '</h3>',
+        		         '<a target="_BLANK" class="snetbx-popup" href="' + item.website + '">' + item.website + '</a>'
+        		         ].join('\n');
             }
         }
+        
+        SnetPopup.popupProfile(m, pid, left, 0, top, arrowLeft, 'snetbl-list-container');
         $j('#spring-bulletin-loader').hide();
     },
     
     hideProfile: function(node) {
         var $j = jQuery.noConflict();
-         eid = node.replace(/\./g, "-");
-        element = $j("#"+eid+"-profile");
+        var eid = node.replace(/\./g, "-");
+        var element = $j("#"+eid+"-profile");
         element.hide();
     },
     
@@ -158,9 +192,9 @@ var SNetBulletinsLatestCli = {
     	 var $j = jQuery.noConflict();
     	 for(index in bulletins) {
     		 for(node in  bulletins[index]) {
-    			 item = bulletins[index][node];
+    			 var item = bulletins[index][node];
     			 
-    			 info = [
+    			 var info = [
     			         item.content,
     			         "<br><a href='javascript:void(0);' onclick='SNetBulletinsLatestCli.hideContent(`"+item.uid+"`)'>hide</div>"
     			       ].join('\n');
@@ -174,7 +208,7 @@ var SNetBulletinsLatestCli = {
     
     hideContent: function(uid) {
         var $j = jQuery.noConflict();
-        element = $j("#content-"+uid);
+        var element = $j("#content-"+uid);
         element.hide();
-    },
+    }
 }

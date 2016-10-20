@@ -19,6 +19,7 @@ and open the template in the editor.
 
 .spring-bulletin td.node-uri {
     font-weight: bold;
+    font-family: monospace;
 }
 
 .spring-bulletin tr.profile-view {
