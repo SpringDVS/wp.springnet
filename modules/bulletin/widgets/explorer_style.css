@@ -53,31 +53,6 @@ div.snetb-explorer table.listing td a.node-name {
 	cursor: pointer;
 }
 
-div.div.snetb-explorer div.popup-container .snetbx-popup {
-	
-}
-
-div.snetb-explorer div.snetbx-popup-window {
-	border: 1px solid #6F6F6F;
-	border-radius: 3px;
-	background-color: #DFDFDF;
-	padding: 5px;
-	width: 300px;
-}
-
-div.snetb-explorer div.snetbx-popup-window h3 {
-	margin-bottom: 5px; 
-}
-
-.arrow-up {
-  width: 0; 
-  height: 0; 
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  
-  border-bottom: 5px solid #6F6F6F;
-  margin-left: 220px;
-}
 
 
 
