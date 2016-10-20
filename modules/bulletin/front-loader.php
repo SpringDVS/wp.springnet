@@ -10,33 +10,53 @@ add_action('wp_ajax_nopriv_gateway_bulletin_request',
 		'springnet_bulletin_request_gateway_handler');
 
 function springnet_bulletin_request_gateway_handler() {
-	$uri = filter_input(INPUT_POST,'uri')
-	? "spring://".filter_input(INPUT_POST,'uri')
-	: wp_die();
+	
+	$network =($n = filter_input(INPUT_POST,'network')) ?
+		"spring://".$n
+		: null;
+	$node = ($n = filter_input(INPUT_POST,'node')) ? 
+		"spring://$n"
+		: null;
+
+	$uid = ($u = filter_input(INPUT_POST,'uid')) ?
+		"$u"
+		: null;
+	
+	
+	if(!$network && !$node) { wp_die('{"status":"error"}'); }
+	
+	$hier = $network ? $network : $node;
+	
+	$qobj = array();
+	if($t = filter_input(INPUT_POST,'tags')) { $qobj['tags'] = $t; };
+	if($t = filter_input(INPUT_POST,'limit')) { $qobj['limit'] = $t; };
+	
 
 	include SPRINGNET_DIR.'/plugin/models/class-gateway-handler.php';
-	$nodes = Gateway_Handler::resolve_uri($uri);
+	$nodes = Gateway_Handler::resolve_uri($hier);
+
+	$service = $network || ($node && $uid) ?
+		"$hier/bulletin/{$uid}?".http_build_query($qobj)
+		: "$hier/orgprofile/?".http_build_query($qobj);
+
 
 	try {
-		$message = \SpringDvs\Message::fromStr("service $uri");
+		$message = \SpringDvs\Message::fromStr("service $service");
 	} catch(\Exception $e) {
-		return ['status' => 'error', 'uri' => $uri];
+		return ['status' => 'error', 'uri' => $service];
 	}
 
 
-	$response = Gateway_Handler::outbound_first_response($message, $nodes);
+	$response = Gateway_Handler::multicast_service_array(
+						Gateway_Handler::outbound_first_response($message, $nodes)
+				);
 
-	if($response === null) {
+	if(!$response) {
 		return ['status' => 'error', 'uri' => $uri, 'reason' => 'Request failed'];
 	}
 
-	if($response->content()->type() != \SpringDvs\ContentResponse::ServiceText) {
-		return ['status' => 'error', 'uri' => $uri, 'reason' => 'Invalid service response type'];
-	}
-
-	$v = explode('|', $response->content()->content()->get());
 	$serviced = array();
-	foreach($v as $k => $val) {
+	foreach($response as $k => $val) {
 		if($val == "") continue;
 		$serviced[$k] = json_decode($val);
 	}
@@ -46,8 +66,7 @@ function springnet_bulletin_request_gateway_handler() {
 			"content" => $serviced
 	];
 
-	echo json_encode($dec);
-	wp_die();
+	wp_die(json_encode($dec));
 }
 
 add_action('wp_ajax_gateway_bulletin_explore',
