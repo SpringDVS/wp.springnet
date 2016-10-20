@@ -9,7 +9,9 @@ class Snetb_Category_Explorer extends WP_Widget {
 				);
 	
 		if (is_active_widget( false, false, $this->id_base )) {
+			wp_enqueue_script('springnet_bulletin_popup_js', plugins_url('springnet/modules/bulletin/widgets/bulletin_popup.js'));
 			wp_enqueue_script('springnet_bulletin_explorer_js', plugins_url('springnet/modules/bulletin/widgets/explorer_client.js'));
+			wp_enqueue_style('springnet_bulletin_style_css', plugins_url('springnet/modules/bulletin/widgets/bulletin_style.css'));
 			wp_enqueue_style('springnet_bulletin_explorer_css', plugins_url('springnet/modules/bulletin/widgets/explorer_style.css'));
 	
 			$nonce = wp_create_nonce('springnet_gateway_bulletin_explorer');
@@ -61,7 +63,7 @@ class Snetb_Category_Explorer extends WP_Widget {
 			}
 			$selected = $categories[0];
 			?>
-			<div class="snetb-explorer" id="snetb-explorer-container">
+			<div class="snetb-explorer snet-bulletin-widget" id="snetb-explorer-container">
 			<h2 class="tabs">
 
 			<?php foreach($categories as $cat): ?>

@@ -1,8 +1,3 @@
-PopupAnchor = function(id, anchor) {
-	this.id = id;
-	this.anchor = anchor;
-};
-
 var SnetbExplorerClient = {
 	    network: "",
 	    category: "",
@@ -177,10 +172,8 @@ var SnetbExplorerClient = {
 	    	e.html(html);
 	    	
 	    	$j('#'+idNodeName).click(function(){
-	    		if(SnetbExplorerClient.activeAnchor !== undefined) {
-	    			$j('#'+SnetbExplorerClient.activeAnchor.id).remove();
-	    			SnetbExplorerClient.activeAnchor = undefined;
-	    		}
+	    		
+	    		SnetPopup.clearPopups();
 	    		var idPopup = prefix+"-popup";
 	    		SnetbExplorerClient.activeAnchor = new PopupAnchor(idPopup, this.id)
 	    		SnetbExplorerClient.requestProfile(details.node);
@@ -195,15 +188,18 @@ var SnetbExplorerClient = {
 	    	var pid = SnetbExplorerClient.activeAnchor.id;
 	    	var anchor = SnetbExplorerClient.activeAnchor.anchor;
     		var pos = $j('#'+anchor).position();
-    		var width = $j('#'+anchor).width();
+    		var arrowLeft = 10;
+    		var left = pos.left;
+    		var top = pos.top + 25;
     		
     		var m = [
     		         '<h3 class="snetbx-popup">' + details.name + '</h3>',
     		         '<a target="_BLANK" class="snetbx-popup" href="' + details.website + '">' + details.website + '</a>'
     		         ].join('\n');
-	    	SnetbExplorerClient.popup(m, pid, pos, width);
+    		
+    		
+	    	SnetPopup.popupProfile(m, pid, left, -200, top, arrowLeft, 'snetb-explorer-container');
 	    	
-	    	$j('body').click(snetbClosePopup);
 	    },
 	    
 	    applyMessage: function(error) {
@@ -222,25 +218,5 @@ var SnetbExplorerClient = {
 	    	var idDetail = prefix+"-detail-" + uid;
 	    	$j('#'+idDetail).hide();
 	    	this.swapClickEvent(node, uid, false);
-	    },
-	    
-	    popup: function(message, id, pos, width) {
-	    	var $j = jQuery.noConflict();
-	    	var popup = [
-		    		    '<div id="'+id+'" class="popup-container" style="position: absolute; left:'+(pos.left-200)+'px; top:'+(pos.top+25)+'px;">',
-		    		    '<div class="arrow-up"></div>',
-		    		    '<div class="snetbx-popup snetbx-popup-window">'+message+'</div>',
-		    		    '</div>'
-		    		].join('\n');
-    		$j('#snetb-explorer-container').append(popup);
 	    }
  }
-
-function snetbClosePopup(e) {
-		if(e.target.className == 'snetbx-popup') {
-			return;
-		};
-		var $j = jQuery.noConflict();
-		$j('#'+SnetbExplorerClient.activeAnchor.id).remove();
-		$j('body').unbind('click', snetbClosePopup);
-}
