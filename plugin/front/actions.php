@@ -1,28 +1,12 @@
 <?php
 
-add_action( 'wp', 'springnet_service_hook' );
-function springnet_service_hook() {
-	if(is_page('spring')) {
-		require SPRINGNET_DIR.'/plugin/front/service.php';
-		$response = springnet_service_request();
+ add_action( 'springnet_service', 'springnet_process' );
+ function springnet_process() {
+	require SPRINGNET_DIR.'/plugin/front/service.php';
+ 	$response = springnet_service_request();
 
-		echo $response;
-	}
+ 	echo $response;
 }
-
-
-
-add_filter( 'template_include', 'springnet_service_hook_template' );
-function springnet_service_hook_template( $page_template )
-{
-	if ( is_page( 'spring' ) ) {
-		$page_template = __DIR__ . '/views/service-hook-template.php';
-	}
-	return $page_template;
-}
-
-
-
 
 add_action( 'init', 'springnet_front_load_modules', 0 );
 function springnet_front_load_modules() {
@@ -39,4 +23,27 @@ function springnet_front_load_modules() {
 add_action( 'init', 'springnet_init');
 function springnet_init() {
 	do_action('springnet_init');
+}
+
+add_action( 'parse_request', 'springnet_service' );
+function springnet_service( &$wp ) {
+
+	if ( array_key_exists( 'springnet_hook', $wp->query_vars ) 
+	|| (array_key_exists( 'pagename', $wp->query_vars) 
+		&& $wp->query_vars['pagename'] == 'spring' ) ) {
+		do_action('springnet_service');
+		exit();
+	}
+	return;
+}
+
+add_action( 'init', 'springnet_url_rewrite' );
+function springnet_url_rewrite() {
+	add_rewrite_rule('^spring/?$', 'index.php?springnet_hook=1', 'top');
+}
+
+add_filter( 'query_vars', 'springnet_service_var' );
+function springnet_service_var( $query_vars ) {
+	$query_vars[] = 'springnet_hook';
+	return $query_vars;
 }
