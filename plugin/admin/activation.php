@@ -1,6 +1,8 @@
 <?php
 
 register_activation_hook(SPRINGNET_MAIN, 'springnet_activation_install');
+register_activation_hook(SPRINGNET_MAIN, 'springnet_flush_rewrite');
+register_deactivation_hook(SPRINGNET_MAIN, 'springnet_flush_rewrite' );
 
 function springnet_activation_install() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -54,4 +56,11 @@ function springnet_activation_install() {
 			INDEX repo_tag_id (repo_tag,repo_id)
 			) $charset_collate;";
 	$wpdb->query($sql4);
+	
+	add_rewrite_rule('^spring/?$', 'index.php?springnet_hook=1', 'top');
+
+}
+
+function springnet_flush_rewrite() {
+	flush_rewrite_rules();
 }
