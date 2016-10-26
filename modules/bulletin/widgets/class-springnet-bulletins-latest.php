@@ -10,10 +10,11 @@ class SpringNet_Bulletins_Latest extends WP_Widget {
 			);
 		
 			if (is_active_widget( false, false, $this->id_base )) {
-				wp_enqueue_script('springnet_bulletin_popup_js', plugins_url('springnet/modules/bulletin/widgets/bulletin_popup.js'));
-				wp_enqueue_script('springnet_bulletin_lastest_js', plugins_url('springnet/modules/bulletin/widgets/latest_client.js'));
-				wp_enqueue_style('springnet_bulletin_style_css', plugins_url('springnet/modules/bulletin/widgets/bulletin_style.css'));
-				wp_enqueue_style('springnet_bulletin_lastest_css', plugins_url('springnet/modules/bulletin/widgets/latest_style.css'));
+				
+				wp_enqueue_script('springnet_bulletin_popup_js', SPRINGNET_URL.'/modules/bulletin/widgets/bulletin_popup.js');
+				wp_enqueue_script('springnet_bulletin_lastest_js', SPRINGNET_URL.'/modules/bulletin/widgets/latest_client.js');
+				wp_enqueue_style('springnet_bulletin_style_css', SPRINGNET_URL.'/modules/bulletin/widgets/bulletin_style.css');
+				wp_enqueue_style('springnet_bulletin_lastest_css', SPRINGNET_URL.'/modules/bulletin/widgets/latest_style.css');
 				
 				$nonce = wp_create_nonce('springnet_gateway_bulletin');
 				wp_localize_script( 'springnet_bulletin_lastest_js', 'sn_gateway_bulletin', array(
@@ -55,7 +56,7 @@ class SpringNet_Bulletins_Latest extends WP_Widget {
 	function widget( $args, $instance ) {
 		extract( $args );
 		echo $before_widget;
-		$loader = "<img class='sdvs-loader' id='spring-bulletin-loader' src=".plugins_url('springnet/res/img/load.gif').">";
+		$loader = "<img class='sdvs-loader' id='spring-bulletin-loader' src='".SPRINGNET_URL."/res/img/load.gif'>";
 		echo $before_title . 'Latest Bulletins on <em>' . $instance['network'] ."</em>$loader". $after_title;	
 		
 		$uri = $instance['network'];

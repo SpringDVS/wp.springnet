@@ -9,10 +9,10 @@ class Snetb_Category_Explorer extends WP_Widget {
 				);
 	
 		if (is_active_widget( false, false, $this->id_base )) {
-			wp_enqueue_script('springnet_bulletin_popup_js', plugins_url('springnet/modules/bulletin/widgets/bulletin_popup.js'));
-			wp_enqueue_script('springnet_bulletin_explorer_js', plugins_url('springnet/modules/bulletin/widgets/explorer_client.js'));
-			wp_enqueue_style('springnet_bulletin_style_css', plugins_url('springnet/modules/bulletin/widgets/bulletin_style.css'));
-			wp_enqueue_style('springnet_bulletin_explorer_css', plugins_url('springnet/modules/bulletin/widgets/explorer_style.css'));
+			wp_enqueue_script('springnet_bulletin_popup_js', SPRINGNET_URL.'/modules/bulletin/widgets/bulletin_popup.js');
+			wp_enqueue_script('springnet_bulletin_explorer_js', SPRINGNET_URL.'/modules/bulletin/widgets/explorer_client.js');
+			wp_enqueue_style('springnet_bulletin_style_css', SPRINGNET_URL.'/modules/bulletin/widgets/bulletin_style.css');
+			wp_enqueue_style('springnet_bulletin_explorer_css', SPRINGNET_URL.'/modules/bulletin/widgets/explorer_style.css');
 	
 			$nonce = wp_create_nonce('springnet_gateway_bulletin_explorer');
 			wp_localize_script( 'springnet_bulletin_explorer_js', 'sn_gateway_explorer', array(
@@ -52,7 +52,7 @@ class Snetb_Category_Explorer extends WP_Widget {
 		function widget( $args, $instance ) {
 			extract( $args );
 			echo $before_widget;
-			$loader = "<img class='sdvs-loader' id='spring-explorer-loader' src=".plugins_url('springnet/res/img/load.gif').">";
+			$loader = "<img class='sdvs-loader' id='spring-explorer-loader' src='".SPRINGNET_URL."/res/img/load.gif'>";
 			echo $before_title . 'Explore <em>' . $instance['network'] ."</em>$loader". $after_title;	
 			
 		

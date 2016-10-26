@@ -53,13 +53,13 @@ function springnet_enqueue_scripts($hook) {
 	}
 	
 	wp_enqueue_style( 'springnet_admin',
-			plugins_url('springnet/res/css/springnet_admin.css'));
+			SPRINGNET_URL.'/res/css/springnet_admin.css');
 }
 
 
 function springnet_enqueue_script_plugin_settings() {
 	wp_enqueue_script( 'plugin_settings',
-			plugins_url('springnet/res/js/plugin_settings.js'),
+			SPRINGNET_URL.'/res/js/plugin_settings.js',
 			array('jquery') );
 	
 	$nonce = wp_create_nonce('springnet_script_plugin_settings');
