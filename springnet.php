@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) or die( 'Error' );
 define('SPRINGNET_MAIN', __FILE__);
 define('SPRINGNET_DIR', __DIR__);
 define('SPRINGNET_VERSION', '0.3.0');
+define('SPRINGNET_URL', plugins_url('',__FILE__));
 
 require __DIR__.'/autoload.php';
 
