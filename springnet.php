@@ -20,6 +20,7 @@ defined( 'ABSPATH' ) or die( 'Error' );
 
 define('SPRINGNET_MAIN', __FILE__);
 define('SPRINGNET_DIR', __DIR__);
+
 define('SPRINGNET_VERSION', '0.3.0');
 define('SPRINGNET_URL', plugins_url('',__FILE__));
 
@@ -45,7 +46,4 @@ if(is_admin() && (!defined( 'DOING_AJAX' ) || !DOING_AJAX) ) {
 	require __DIR__.'/plugin/front/widgets.php';
 }
 
-
-
-
-?>
+require __DIR__.'/plugin/glob.php';
