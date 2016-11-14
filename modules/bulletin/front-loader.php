@@ -1,5 +1,7 @@
 <?php
 
+use SpringDvs\ContentResponse;
+
 require __DIR__.'/glob-loader.php';
 
 
@@ -42,24 +44,42 @@ function springnet_bulletin_request_gateway_handler() {
 
 	try {
 		$message = \SpringDvs\Message::fromStr("service $service");
+		$response = Gateway_Handler::outbound_first_response($message, $nodes);
 	} catch(\Exception $e) {
-		return ['status' => 'error', 'uri' => $service];
+
+		wp_die(['status' => 'error', 'uri' => $service]);
 	}
 
-
-	$response = Gateway_Handler::multicast_service_array(
-						Gateway_Handler::outbound_first_response($message, $nodes)
-				);
-
 	if(!$response) {
-		return ['status' => 'error', 'uri' => $uri, 'reason' => 'Request failed'];
+		wp_die(json_encode(['status' => 'error', 'uri' => $hier, 'reason' => 'Request failed']));
 	}
 
 	$serviced = array();
-	foreach($response as $k => $val) {
-		if($val == "") continue;
-		$serviced[$k] = json_decode($val);
+	
+
+	switch($response->getContentResponse()->type()) {
+	
+		case \SpringDvs\ContentResponse::ServiceText:	
+			$jobj = json_decode($response->getContentResponse()->getServiceText()->get(), true);
+			$v = reset($jobj);
+			$k = key($jobj);
+			$serviced[] = array($k => $v);
+			break;
+		
+		
+		case \SpringDvs\ContentResponse::ServiceMulti:
+			foreach($response->getContentResponse()->getServiceParts() as $msg) {
+				$jobj = json_decode($msg->getContentResponse()->getServiceText()->get(), true);
+				$v = reset($jobj);
+				$k = key($jobj);
+			
+				$serviced[] = array($k => $v); 
+			}
+			break;
+			
+		default: break;
 	}
+
 
 	$dec = [
 			"status" => 'ok',

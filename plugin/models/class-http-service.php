@@ -1,5 +1,7 @@
 <?php
 
+use SpringDvs\CmdType;
+
 class HTTP_Service {
 	
 	public static function post_request($host, $message, $secure = false) {
@@ -17,7 +19,7 @@ class HTTP_Service {
 		$len = strlen($message);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
 		curl_setopt($ch, CURLOPT_POST,           1 );
-		curl_setopt($ch, CURLOPT_USERAGENT,      "WpSpringNet/0.1" );
+		curl_setopt($ch, CURLOPT_USERAGENT,      "WpSpringNet/" . SPRINGNET_VERSION );
 		curl_setopt($ch, CURLOPT_POSTFIELDS,      $message);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
 		return curl_exec($ch);
@@ -30,7 +32,7 @@ class HTTP_Service {
 	 * @param String $host The hostname of the node
 	 * @param mixed $message Message as String or \SpringDvs\Message
 	 * @param boolean $secure Flag whether to trip on HTTPS failure
-	 * @return \SpringDvs\Message
+	 * @return \SpringDvs\Message|\SpringDvs\Message[]
 	 */
 	public static function dvsp_request($host, $message, $secure = false) {
 		$string = "";
@@ -39,6 +41,7 @@ class HTTP_Service {
 		} else if(is_object($message)) {
 			$string = $message->toStr();
 		}
+
 		$response = self::post_request($host, $string);
 		
 		try {
@@ -48,6 +51,39 @@ class HTTP_Service {
 		}
 
 		return null;
+	}
+	
+	/**
+	 * Perform a DVSP Broadcast request
+	 *
+	 * @param String $host The hostname of the node
+	 * @param mixed $message Message as String or \SpringDvs\Message
+	 * @param boolean $secure Flag whether to trip on HTTPS failure
+	 * @return \SpringDvs\Message[]
+	 */
+	public static function dvsp_broadcasting($host, $message, $secure = false) {
+		$string = "";
+		if( is_string($message) ) {
+			$string = $message;
+		} else if(is_object($message)) {
+			$string = $message->toStr();
+		}
+		$response = self::post_request($host, $string);
+	
+		try {
+			$msg = \SpringDvs\Message::fromStr($response);
+			if($msg->getContentResponse()->code() != \SpringDvs\ProtocolResponse::Ok
+			|| $msg->getContentResponse()->type() != \SpringDvs\ContentResponse::ServiceMulti) {
+				return array();
+			}
+			
+			return \SpringDvs\ContentResponse::parseServiceMulti($response, $msg->getContentResponse()->offset());
+			
+		} catch(Exception $e) {
+			return array();
+		}
+	
+		return array();
 	}
 
 	/**
