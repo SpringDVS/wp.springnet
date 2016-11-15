@@ -21,7 +21,7 @@ var SnetbExplorerClient = {
 	        
 	        $j('#spring-explorer-loader').show();
 
-	    	$j.post(sn_gateway_bulletin.ajax_url, {
+	    	$j.post(sn_gateway_explorer.ajax_url, {
 	            _ajax_nonce: sn_gateway_explorer.nonce,
 	             action: "gateway_bulletin_explore",
 	             network: network,
@@ -45,7 +45,7 @@ var SnetbExplorerClient = {
 	    requestUid: function(node, uid) {
 	    	var $j = jQuery.noConflict();
 	    	$j('#spring-explorer-loader').show();
-	    	$j.post(sn_gateway_bulletin.ajax_url, {
+	    	$j.post(sn_gateway_explorer.ajax_url, {
 	            _ajax_nonce: sn_gateway_explorer.nonce,
 	             action: "gateway_bulletin_explore",
 	             network: node,
@@ -67,7 +67,7 @@ var SnetbExplorerClient = {
 	    requestProfile: function(node) {
 	    	var $j = jQuery.noConflict();
 	    	$j('#spring-explorer-loader').show();
-	    	$j.post(sn_gateway_bulletin.ajax_url, {
+	    	$j.post(sn_gateway_explorer.ajax_url, {
 	            _ajax_nonce: sn_gateway_explorer.nonce,
 	             action: "gateway_bulletin_explore",
 	             profile: node,
