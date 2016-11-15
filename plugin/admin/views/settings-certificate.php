@@ -39,6 +39,7 @@ if(!$has_public_cert): ?>
 		<button class="button button-primary" id="cert-generate-button">
 			Generate Certificate
 		</button>
+		<img style="display: none;" class='sdvs-loader' id='spring-cert-loader' src='<?php echo SPRINGNET_URL; ?>/res/img/load.gif'>
 		
 		<?php return; ?>
 	<?php endif; ?>

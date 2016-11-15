@@ -54,6 +54,7 @@ jQuery(document).ready(function($) {           //wrapper
     	}
 
     	var this2 = this;
+    	$("#spring-cert-loader").show();
         $.post(sn_settings.ajax_url, {
            _ajax_nonce: sn_settings.nonce,
             action: "settings_generate_certificate",
