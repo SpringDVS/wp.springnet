@@ -125,24 +125,20 @@ function springnet_bulletin_explore_handler() {
 			$message = \SpringDvs\Message::fromStr("service $uri/bulletin/$uid");
 		} 
 		
-		$nodes = Gateway_Handler::multicast_service_array(
-							Gateway_Handler::request_uri_first_response($uri, $message)
-					);
-		
-		if(!$nodes) {
-			echo json_encode(array('status'=>'error on response'));
-			wp_die();
-		}
+		$response = Gateway_Handler::request_uri_first_response($uri, $message);
 
 		
+		if(!$response) { wp_die(json_encode(array('status'=>'error on response'))); }
+
+
 		if($profile == "") {
-			if($uid == "") {
-				$out = springnet_bulletin_explore_listing($nodes, true);
-			} else {
-				$out = springnet_bulletin_explore_listing($nodes, false);
+			if($uid == "") { // Getting broadcast listings
+				$out = springnet_bulletin_explore_listing($response);
+			} else { // Getting specific listing from node
+				$out = springnet_bulletin_explore_listing($response);
 			}
 		} else {
-			$out = springnet_bulletin_explore_profile($nodes);
+			$out = springnet_bulletin_explore_profile($response);
 		}
 
 	echo json_encode(array('status'=>'ok','content'=>$out));
@@ -150,36 +146,39 @@ function springnet_bulletin_explore_handler() {
 	wp_die();
 }
 
-function springnet_bulletin_explore_listing($nodes, $isMulti) {
+function springnet_bulletin_explore_listing(\SpringDvs\Message $response) {
+	
 	$listing = array();
-	foreach($nodes as $node) {
-		if(strlen($node) == 0) continue;
+	$type = $response->getContentResponse()->type();
+	if($type == \SpringDvs\ContentResponse::ServiceText) {
+		$json = $response->getContentResponse()->getServiceText()->get();
+		$jobj = json_decode($json,true);
+		$listing = reset($jobj);
+		$listing['node'] = key($jobj);
+	} elseif ($type == \SpringDvs\ContentResponse::ServiceMulti) {
+		foreach($response->getContentResponse()->getServiceParts() as $msg) {
+			$json = $msg->getContentResponse()->getServiceText()->get();
+			$jobj = json_decode($json,true);
+			$nlst = reset($jobj);
+			$node = key($jobj);
+			foreach($nlst as &$item) { $item['node'] = $node; }
 			
-		$j = json_decode($node,true);
-			
-			
-		foreach($j as $k => &$v) {
-			if($isMulti) {
-				foreach($v as &$p){ $p['node'] = $k; }
-				$listing = array_merge($listing, $v);
-			} else {
-				$v['node'] = $k;
-				$listing = $v;
-			}
+			$listing = array_merge($listing, $nlst);
 		}
 	}
+
 	return $listing;
 }
 
-function springnet_bulletin_explore_profile($nodes) {
-	$listing = null;
-	foreach($nodes as $response) {
-		
-		$s = json_decode($response,true);
-		foreach($s as $node => &$profile) {
-			$profile['node'] = $node;
-			$listing = $profile;
-		}
+function springnet_bulletin_explore_profile($response) {
+	$profile = array();
+	$type = $response->getContentResponse()->type();
+	if($type == \SpringDvs\ContentResponse::ServiceText) {
+		$json = $response->getContentResponse()->getServiceText()->get();
+		$jobj = json_decode($json,true);
+		$profile = reset($jobj);
+		$profile['node'] = key($jobj);
 	}
-	return $listing;
+	
+	return $profile;
 }
