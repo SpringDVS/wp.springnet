@@ -44,7 +44,7 @@ class Snet_Netview_Widget extends WP_Widget {
 			extract( $args );
 			echo $before_widget;
 			$loader = "<img class='sdvs-loader' id='spring-netview-loader' src='".SPRINGNET_URL."/res/img/load.gif'>";
-			echo $before_title . 'Live Topography of <em>' . $instance['network'] ."</em>$loader". $after_title;	
+			echo $before_title . 'Live Topology of <em>' . $instance['network'] ."</em>$loader". $after_title;	
 			
 		
 			$uri = $instance['network'];

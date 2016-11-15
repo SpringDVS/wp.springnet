@@ -15,20 +15,20 @@ var SnetNetViewClient = {
 
     	var $j = jQuery.noConflict();
     	
-    	var oldcat = SnetbExplorerClient.category;
+    	var oldcat = SnetNetViewClient.category;
 
     	this.network = network;
     	
     	
-
-    	$j.post(sn_gateway_bulletin.ajax_url, {
+    	$j("#spring-netview-loader").show();
+    	$j.post(sn_gateway_netview.ajax_url, {
             _ajax_nonce: sn_gateway_netview.nonce,
              action: "gateway_snet_netview",
              network: network,
     	}, function(response) {
-
     		var data = $j.parseJSON(response);
     		SnetNetViewClient.renderTopography(data);
+    		$j("#spring-netview-loader").hide();
     	});
     },
     
