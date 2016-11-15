@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 Plugin Name: SpringNet
 Plugin URI:  http://spring-dvs.org
 Description: Plugin for running a Spring Network node off the back of Wordpress
-Version:     0.3.0-dev.4
+Version:     0.3.0
 Author:      The Care Connections Initiative c.i.c
 Author URI:  http://spring-dvs.org
 License:     GPLv3 or later
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) or die( 'Error' );
 define('SPRINGNET_MAIN', __FILE__);
 define('SPRINGNET_DIR', __DIR__);
 
-define('SPRINGNET_VERSION', '0.3.0-dev.4');
+define('SPRINGNET_VERSION', '0.3.0');
 define('SPRINGNET_URL', plugins_url('',__FILE__));
 
 require __DIR__.'/autoload.php';
